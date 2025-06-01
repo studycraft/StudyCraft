@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyCraft - Cadastro de Professores</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard_admin' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'cadastro_professor' %}" class="active"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
+                    <li><a href="{% url 'cadastro_aluno' %}"><i class="fas fa-user-graduate"></i> Alunos</a></li>
+                    <li><a href="{% url 'cadastro_trilha' %}"><i class="fas fa-project-diagram"></i> Trilhas</a></li>
+                </ul>
+            </nav>
+            <button class="btn" onclick="sairDoPainel()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </aside>
+
+        <main class="content">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Cadastrar Professor</h1>
+            
+            <form id="form-professor">
+                <div class="form-group">
+                    <label for="nome"><i class="fas fa-user"></i> Nome Completo:</label>
+                    <input type="text" id="nome" required placeholder="Ex: Maria da Silva">
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+                    <input type="email" id="email" required placeholder="Ex: maria@exemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="matricula"><i class="fas fa-id-card"></i> Matrícula:</label>
+                    <input type="text" id="matricula" required pattern="PROF\d{5}"
+                        title="Formato: PROF + 5 dígitos (Ex: PROF12345)" placeholder="Ex: PROF12345">
+                </div>
+                <div class="form-group">
+                    <label for="disciplina"><i class="fas fa-book"></i> Disciplina:</label>
+                    <input type="text" id="disciplina" required placeholder="Ex: Matemática">
+                </div>
+                <div class="form-group">
+                    <label for="senha"><i class="fas fa-lock"></i> Senha de Acesso:</label>
+                    <input type="password" id="senha" required placeholder="Digite uma senha segura">
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-save"></i> Cadastrar</button>
+            </form>
+
+            <div class="tabela-container">
+                <h2><i class="fas fa-list"></i> Professores Cadastrados</h2>
+                <table id="tabela-professores">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Matrícula</th>
+                            <th>Disciplina</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">Carregando professores...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/admin.js' %}"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                alert('Você precisa estar logado!');
+                window.location.href = '../login/admin.html';
+                return;
+            }
+
+            const form = document.getElementById('form-professor');
+            const tabela = document.querySelector('#tabela-professores tbody');
+
+            function editarProfessor(id, nome, email, matricula, disciplina) {
+                document.getElementById('nome').value = nome;
+                document.getElementById('email').value = email;
+                document.getElementById('matricula').value = matricula;
+                document.getElementById('disciplina').value = disciplina;
+                form.setAttribute('data-id', id);
+            }
+
+            function excluirProfessor(id) {
+                if (!confirm("Tem certeza que deseja excluir este professor?")) return;
+
+                fetch(`http://127.0.0.1:8000/api/professores/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        alert("Professor excluído com sucesso!");
+                        carregarProfessores();
+                    } else {
+                        alert("Erro ao excluir o professor.");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Erro ao excluir o professor.");
+                });
+            }
+
+            function carregarProfessores() {
+                fetch('http://127.0.0.1:8000/api/professores/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    tabela.innerHTML = '';
+                    data.forEach(prof => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${prof.nome || '(sem nome)'}</td>
+                            <td>${prof.matricula}</td>
+                            <td>${prof.disciplina}</td>
+                            <td>
+                                <button class="btn btn-small btn-editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-small btn-excluir">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        `;
+                        // Adiciona comportamento aos botões
+                        tr.querySelector('.btn-editar').addEventListener('click', () => {
+                            editarProfessor(prof.id, prof.nome, prof.email, prof.matricula, prof.disciplina);
+                        });
+                        tr.querySelector('.btn-excluir').addEventListener('click', () => {
+                            excluirProfessor(prof.id);
+                        });
+
+                        tabela.appendChild(tr);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    tabela.innerHTML = '<tr><td colspan="4">Erro ao carregar professores.</td></tr>';
+                });
+            }
+
+
+            function excluirProfessor(id) {
+                if (!confirm('Tem certeza que deseja excluir este professor?')) return;
+
+                fetch(`http://127.0.0.1:8000/api/professores/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        alert('Professor excluído com sucesso!');
+                        carregarProfessores();
+                    } else {
+                        alert('Erro ao excluir professor.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro ao excluir professor.');
+                });
+            }
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                const nome = document.getElementById('nome').value;
+                const email = document.getElementById('email').value;
+                const matricula = document.getElementById('matricula').value;
+                const disciplina = document.getElementById('disciplina').value;
+                const senha = document.getElementById('senha').value;
+
+                const professorId = form.getAttribute('data-id');
+                const metodo = professorId ? 'PUT' : 'POST';
+                const url = professorId
+                    ? `http://127.0.0.1:8000/api/professores/${professorId}/`
+                    : 'http://127.0.0.1:8000/api/professores/';
+
+                fetch(url, {
+                    method: metodo,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ nome, email, matricula, disciplina, senha })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        alert(professorId ? 'Professor atualizado com sucesso!' : 'Professor cadastrado com sucesso!');
+                        form.reset();
+                        form.removeAttribute('data-id');
+                        carregarProfessores();
+                    } else {
+                        res.json().then(data => {
+                            console.error(data);
+                            alert('Erro ao salvar os dados do professor.');
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro ao salvar os dados do professor.');
+                });
+            });
+
+            carregarProfessores();
+        });
+    </script>
+</body>
+</html>

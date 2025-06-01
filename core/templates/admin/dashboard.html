@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyCraft - Painel da Coordenação</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard_admin' %}" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'cadastro_professor' %}"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
+                    <li><a href="{% url 'cadastro_aluno' %}"><i class="fas fa-user-graduate"></i> Alunos</a></li>
+                    <li><a href="{% url 'cadastro_trilha' %}"><i class="fas fa-project-diagram"></i> Trilhas</a></li>
+                </ul>
+            </nav>
+            <button class="btn" onclick="sairDoPainel()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </aside>
+
+        <main class="content">
+            <h1><i class="fas fa-tachometer-alt"></i> Painel da Coordenação</h1>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Total de Alunos</h3>
+                    <p id="total-alunos">0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Total de Professores</h3>
+                    <p id="total-professores">0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>Trilhas Ativas</h3>
+                    <p id="total-trilhas">0</p>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h2><i class="fas fa-clock"></i> Atividades Recentes</h2>
+                <ul id="atividade-recente">
+                    <li>Carregando atividades...</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/admin.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('access_token');  // ✅ Correção aqui
+
+            if (!token) {
+                alert('Você precisa estar logado!');
+                window.location.href = '/login/admin/';  // ✅ Correção no caminho
+                return;
+            }
+
+            console.log('Usuário autenticado com token:', token);
+
+            // ✅ Exemplo de fetch (opcional, caso já tenha essa view criada)
+            /*
+            fetch('http://127.0.0.1:8000/api/admin/dashboard/', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Erro de autenticação');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('total-alunos').textContent = data.total_alunos;
+                document.getElementById('total-professores').textContent = data.total_professores;
+                document.getElementById('total-trilhas').textContent = data.total_trilhas;
+
+                const atividadeRecente = document.getElementById('atividade-recente');
+                atividadeRecente.innerHTML = '';
+                data.atividades.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check"></i> ${item}`;
+                    atividadeRecente.appendChild(li);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro ao carregar o painel.');
+            });
+            */
+        });
+    </script>
+</body>
+</html>

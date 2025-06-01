@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyCraft - Cadastro de Alunos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard_admin' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'cadastro_professor' %}"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
+                    <li><a href="{% url 'cadastro_aluno' %}" class="active"><i class="fas fa-user-graduate"></i> Alunos</a></li>
+                    <li><a href="{% url 'cadastro_trilha' %}"><i class="fas fa-project-diagram"></i> Trilhas</a></li>
+                </ul>
+            </nav>
+            <button class="btn" onclick="sairDoPainel()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </aside>
+
+        <main class="content">
+            <h1><i class="fas fa-user-graduate"></i> Cadastrar Aluno</h1>
+            
+        <form id="form-aluno">
+            <div class="form-group">
+                <label for="nome"><i class="fas fa-user"></i> Nome Completo:</label>
+                <input type="text" id="nome" required placeholder="Ex: João da Silva">
+            </div>
+            <div class="form-group">
+                <label for="ra"><i class="fas fa-id-card"></i> RA:</label>
+                <input type="text" id="ra" required pattern="ALU\d{5}" 
+                    title="Formato: ALU + 5 dígitos (Ex: ALU12345)" placeholder="Ex: ALU12345">
+            </div>
+            <div class="form-group">
+                <label for="turma"><i class="fas fa-users"></i> Turma:</label>
+                <input type="text" id="turma" required placeholder="Ex: 3º Ano B">
+            </div>
+            <div class="form-group">
+                <label for="trilha"><i class="fas fa-project-diagram"></i> Trilhas:</label>
+                <select id="trilha" multiple>
+                    <option value="Front-End">Front-End</option>
+                    <option value="Back-End">Back-End</option>
+                    <option value="Data Science">Data Science</option>
+                </select>
+            </div>
+            <button type="submit" class="btn"><i class="fas fa-save"></i> Cadastrar</button>
+        </form>
+
+
+            <div class="tabela-container">
+                <h2><i class="fas fa-list"></i> Alunos Cadastrados</h2>
+                <table id="tabela-alunos">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>RA</th>
+                            <th>Turma</th>
+                            <th>Trilhas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">Carregando alunos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/admin.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                alert('Você precisa estar logado!');
+                window.location.href = '../login/admin.html';
+                return;
+            }
+
+            const form = document.getElementById('form-aluno');
+            const tabela = document.querySelector('#tabela-alunos tbody');
+
+            function carregarAlunos() {
+                fetch('http://127.0.0.1:8000/api/alunos/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    tabela.innerHTML = '';
+                    data.forEach(aluno => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${aluno.nome}</td>
+                            <td>${aluno.ra}</td>
+                            <td>${aluno.turma}</td>
+                            <td>${aluno.trilhas.join(', ')}</td>
+                        `;
+                        tabela.appendChild(tr);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    tabela.innerHTML = '<tr><td colspan="4">Erro ao carregar alunos.</td></tr>';
+                });
+            }
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                const nome = document.getElementById('nome').value;
+                const ra = document.getElementById('ra').value;
+                const turma = document.getElementById('turma').value;
+                const trilhas = Array.from(document.getElementById('trilha').selectedOptions).map(opt => opt.value);
+
+                fetch('http://127.0.0.1:8000/api/alunos/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ nome, ra, turma, trilhas })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        alert('Aluno cadastrado com sucesso!');
+                        form.reset();
+                        carregarAlunos();
+                    } else {
+                        alert('Erro ao cadastrar aluno.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro ao cadastrar aluno.');
+                });
+            });
+
+            carregarAlunos();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>StudyCraft - Seu parceiro de estudos gamificado</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{% static 'images/logo_sc.png' %}" alt="Logo StudyCraft" class="logo">
+            <h1>StudyCraft</h1>
+            <p>Aprender nunca foi tão divertido!</p>
+        </header>
+
+        <main>
+            <div class="intro">
+                <p>Transforme suas tarefas escolares em missões e ganhe recompensas!</p>
+            </div>
+
+            <div class="login-options">
+                <a href="{% url 'login_aluno' %}" class="btn aluno">Sou Aluno</a>
+                <a href="{% url 'login_professor' %}" class="btn professor">Sou Professor</a>
+                <a href="{% url 'login_admin' %}" class="btn admin">Coordenação</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2025 StudyCraft - Todos os direitos reservados</p>
+        </footer>
+    </div>
+</body>
+</html>

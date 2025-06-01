@@ -1,0 +1,128 @@
+/* Reset e Fontes */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.5em;
+}
+
+header p {
+    color: #7f8c8d;
+    font-size: 1.2em;
+}
+
+.intro {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.login-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn.aluno {
+    background-color: #074EA2;
+    color: white;
+}
+
+.btn.professor {
+    background-color: #057931;
+    color: white;
+}
+
+.btn.admin {
+    background-color: #EF4023;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+footer {
+    margin-top: 40px;
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+/* Logo - Tela Inicial */
+.logo {
+    max-width: 220px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+/* Logo - Telas de Login */
+.logo-small {
+    max-width: 120px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+/* Logo na Sidebar */
+.logo-sidebar {
+    width: min(80%, 180px); /* Máximo de 180px ou 80% da largura da sidebar */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+    padding: 10px;
+}
+
+/* Media Queries para telas menores */
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        padding: 10px;
+    }
+    .logo-sidebar {
+        width: min(50%, 120px); /* Reduz em mobile */
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-sidebar {
+        width: min(40%, 100px); /* Ajuste fino para celulares pequenos */
+    }
+}

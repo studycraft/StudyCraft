@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyCraft - Login Professor</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <img src="{% static 'images/logo_sc.png' %}" alt="Logo StudyCraft" class="logo-small">
+            <h2>Área do Professor</h2>
+            <form id="loginProfessor">
+                <div class="input-group">
+                    <label for="matricula">Matrícula:</label>
+                    <input type="text" id="matricula" required placeholder="Ex: PROF12345">
+                </div>
+                <div class="input-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" required>
+                </div>
+                <button type="submit" class="btn professor">Entrar</button>
+            </form>
+            <a href="{% url 'index' %}" class="back-link">Voltar</a>
+        </div>
+    </div>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>
