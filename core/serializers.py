@@ -10,7 +10,7 @@ class AlunoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProfessorSerializer(serializers.ModelSerializer):
-    nome = serializers.CharField(write_only=True)
+    nome = serializers.CharField()
     email = serializers.EmailField(write_only=True)
     senha = serializers.CharField(write_only=True)
 
@@ -23,6 +23,7 @@ class ProfessorSerializer(serializers.ModelSerializer):
         email = validated_data.pop('email')
         senha = validated_data.pop('senha')
         matricula = validated_data.get('matricula')
+        disciplina = validated_data.get('disciplina')
 
         user = Usuario.objects.create_user(
             username=matricula,
@@ -32,10 +33,12 @@ class ProfessorSerializer(serializers.ModelSerializer):
         )
 
         return Professor.objects.create(
+            nome=nome,              # <--- Salva no Professor também!
             user=user,
             matricula=matricula,
-            disciplina=validated_data.get('disciplina')
+            disciplina=disciplina
         )
+
 
     def update(self, instance, validated_data):
         nome = validated_data.pop('nome', None)
@@ -47,6 +50,7 @@ class ProfessorSerializer(serializers.ModelSerializer):
         user = instance.user
         if nome:
             user.first_name = nome
+            instance.nome = nome      # <--- Atualiza nome do Professor!
         if email:
             user.email = email
         if senha:
@@ -59,6 +63,7 @@ class ProfessorSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
 
 
 class TrilhaSerializer(serializers.ModelSerializer):

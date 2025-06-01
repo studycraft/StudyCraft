@@ -7,12 +7,13 @@ class Usuario(AbstractUser):
     pass
 
 class Professor(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=100)  # <-- Novo campo!
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     matricula = models.CharField(max_length=10, unique=True)
     disciplina = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.nome
 
 class Aluno(models.Model):
     nome = models.CharField(max_length=100)
