@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyCraft - Cadastrar Aventura</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar fixa no estilo do dashboard -->
+    <aside class="sidebar">
+      <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+      <nav>
+        <ul>
+            <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{% url 'cadastro_aventura' %}" class="active"><i class="fas fa-tasks"></i> Aventuras</a></li>
+            <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+        </ul>
+      </nav>
+      <button class="btn" onclick="window.location.href='/'">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="content">
+      <h1><i class="fas fa-tasks"></i> Nova Aventura</h1>
+
+      <form id="form-aventura" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="titulo"><i class="fas fa-heading"></i> Título da Aventura:</label>
+          <input type="text" id="titulo" name="titulo" required placeholder="Ex: Missão Inteiros e Fracionários">
+        </div>
+
+        <div class="form-group">
+          <label for="descricao"><i class="fas fa-align-left"></i> Descrição:</label>
+          <textarea id="descricao" name="descricao" rows="3" placeholder="Explique a tarefa proposta..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="trilha"><i class="fas fa-project-diagram"></i> Trilha:</label>
+          <select id="trilha" name="trilha" required>
+            <option value="">Selecione uma trilha</option>
+            <!-- Será populado via JavaScript -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pontuacao"><i class="fas fa-star"></i> Valor em Pontos:</label>
+          <input type="number" id="pontuacao" name="pontuacao" min="1" required placeholder="Ex: 50">
+        </div>
+
+        <div class="form-group">
+          <label for="prazo"><i class="fas fa-calendar-alt"></i> Prazo:</label>
+          <input type="date" id="prazo" name="prazo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="arquivo"><i class="fas fa-file-upload"></i> Anexar PDF da tarefa:</label>
+          <input type="file" id="arquivo" name="arquivo" accept="application/pdf">
+        </div>
+
+        <div class="form-group">
+          <label for="turma"><i class="fas fa-users"></i> Turma Destinada:</label>
+          <input type="text" id="turma" name="turma" required placeholder="Ex: 2º Ano B">
+        </div>
+
+        <button type="submit" class="btn">
+          <i class="fas fa-save"></i> Salvar Aventura
+        </button>
+      </form>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // TODO: substituir por fetch real de trilhas do professor
+      const trilhaSelect = document.getElementById('trilha');
+      trilhaSelect.innerHTML += '<option value="1">Matemática - Lógica</option>';
+      trilhaSelect.innerHTML += '<option value="2">Física - Introdução</option>';
+    });
+  </script>
+</body>
+</html>

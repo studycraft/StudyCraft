@@ -48,6 +48,15 @@ def cadastro_aluno(request):
 def cadastro_trilha(request):
     return render(request, 'admin/cadastro-trilha.html')
 
+def painel_professor(request):
+    return render(request, 'professor/dashboard.html')
+
+def cadastro_aventura(request):
+    return render(request, 'professor/cadastro-aventura.html')
+
+def relatorio_engajamento(request):
+    return render(request, 'professor/relatorio-engajamento.html')
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

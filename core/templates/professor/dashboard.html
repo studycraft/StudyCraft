@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyCraft - Painel do Professor</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard_professor' %}" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'cadastro_aventura' %}"><i class="fas fa-tasks"></i> Aventuras</a></li>
+                    <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+                </ul>
+            </nav>
+            <button class="btn" onclick="window.location.href='/'">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </aside>
+
+        <main class="content">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Bem-vindo(a), Prof. Diógenes Vieira</h1>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
+                    <h3>Aventuras Criadas</h3>
+                    <p>12</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Alunos Participantes</h3>
+                    <p>85</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Aventuras Concluídas</h3>
+                    <p>9</p>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h2><i class="fas fa-clock"></i> Atividades Recentes</h2>
+                <ul>
+                    <li><i class="fas fa-check"></i> Aventura "Equações do 1º grau" criada</li>
+                    <li><i class="fas fa-check"></i> Aventura "Problemas de lógica" concluída</li>
+                    <li><i class="fas fa-check"></i> Novo aluno participou da trilha "Lógica e Raciocínio"</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

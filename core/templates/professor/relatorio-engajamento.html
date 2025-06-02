@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyCraft - Relatório de Engajamento</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+            <nav>
+                <ul>
+                    <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="{% url 'cadastro_aventura' %}"><i class="fas fa-tasks"></i> Aventuras</a></li>
+                    <li><a href="{% url 'relatorio_engajamento' %}" class="active"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+                </ul>
+            </nav>
+            <button class="btn" onclick="window.location.href='/'">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="content">
+      <h1><i class="fas fa-chart-line"></i> Relatório de Engajamento por Turma</h1>
+
+      <div class="form-group">
+        <label for="filtro-turma"><i class="fas fa-filter"></i> Selecione a turma:</label>
+        <select id="filtro-turma">
+          <option value="">Todas</option>
+          <!-- Turmas serão populadas dinamicamente -->
+        </select>
+      </div>
+
+      <div class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Aluno</th>
+              <th>Turma</th>
+              <th>Aventuras Concluídas</th>
+              <th>Pontuação Total</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-engajamento">
+            <tr>
+              <td colspan="4">Carregando dados...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabela = document.getElementById('tabela-engajamento');
+      const filtroTurma = document.getElementById('filtro-turma');
+      const dadosFicticios = [
+        { nome: 'Maria Freitas', turma: '1º B', concluidas: 0, pontos: 0 },
+        { nome: 'Emanuel Lima', turma: '1º A', concluidas: 5, pontos: 280 },
+        { nome: 'Catarina Gonçalves', turma: '1º B', concluidas: 1, pontos: 58 },
+        { nome: 'Laís Correia', turma: '2º B', concluidas: 2, pontos: 56 },
+        { nome: 'Kamilly da Rosa', turma: '1º B', concluidas: 4, pontos: 220 },
+        { nome: 'Ian da Rosa', turma: '1º B', concluidas: 0, pontos: 0 },
+        { nome: 'Fernando Ribeiro', turma: '2º B', concluidas: 2, pontos: 48 },
+        { nome: 'Diego Nogueira', turma: '3º A', concluidas: 1, pontos: 49 },
+        { nome: 'Laura Ribeiro', turma: '3º A', concluidas: 1, pontos: 60 },
+        { nome: 'Carolina Araújo', turma: '2º B', concluidas: 3, pontos: 159 },
+        { nome: 'Samuel Nascimento', turma: '2º B', concluidas: 0, pontos: 0 },
+        { nome: 'Augusto Castro', turma: '1º B', concluidas: 1, pontos: 57 },
+        { nome: 'Igor Cardoso', turma: '2º B', concluidas: 0, pontos: 0 },
+        { nome: 'Lavínia Dias', turma: '1º A', concluidas: 5, pontos: 180 },
+        { nome: 'Davi Luiz Costa', turma: '1º B', concluidas: 2, pontos: 48 },
+        { nome: 'Esther Costela', turma: '3º A', concluidas: 4, pontos: 144 },
+        { nome: 'Leandro Mendes', turma: '1º B', concluidas: 5, pontos: 155 },
+        { nome: 'Benjamin Ramos', turma: '1º B', concluidas: 1, pontos: 53 },
+        { nome: 'Antônio Silva', turma: '3º A', concluidas: 2, pontos: 86 },
+        { nome: 'Yago Correia', turma: '3º A', concluidas: 1, pontos: 47 },
+        { nome: 'Stella Ferreira', turma: '2º B', concluidas: 1, pontos: 53 },
+        { nome: 'Valentina Santos', turma: '1º B', concluidas: 3, pontos: 111 },
+        { nome: 'Pedro Pereira', turma: '3º A', concluidas: 5, pontos: 200 },
+        { nome: 'Antônio Fogaça', turma: '2º A', concluidas: 0, pontos: 0 },
+        { nome: 'Lucca Azevedo', turma: '2º A', concluidas: 4, pontos: 168 },
+        { nome: 'Antônio Alves', turma: '1º A', concluidas: 0, pontos: 0 },
+        { nome: 'Kaique Costa', turma: '3º A', concluidas: 0, pontos: 0 },
+        { nome: 'Evelyn Moura', turma: '2º B', concluidas: 3, pontos: 87 },
+        { nome: 'Raquel Oliveira', turma: '1º A', concluidas: 3, pontos: 96 },
+        { nome: 'Manuela Costa', turma: '2º A', concluidas: 3, pontos: 120 },
+        { nome: 'Rafael Duarte', turma: '1º A', concluidas: 5, pontos: 105 },
+        { nome: 'Laís Caldeira', turma: '2º A', concluidas: 4, pontos: 108 },
+        { nome: 'Luana Freitas', turma: '2º B', concluidas: 2, pontos: 98 },
+        { nome: 'Alana Duarte', turma: '3º A', concluidas: 1, pontos: 58 },
+        { nome: 'Lucas Gabriel Cavalcanti', turma: '1º A', concluidas: 0, pontos: 0 },
+        { nome: 'Erick da Rosa', turma: '1º A', concluidas: 4, pontos: 84 },
+        { nome: 'Bryan da Conceição', turma: '1º A', concluidas: 5, pontos: 210 },
+        { nome: 'Bernardo da Rosa', turma: '2º B', concluidas: 3, pontos: 147 },
+        { nome: 'Luna Cardoso', turma: '1º A', concluidas: 5, pontos: 200 },
+        { nome: 'Erick da Mata', turma: '1º A', concluidas: 1, pontos: 44 },
+        { nome: 'Daniela Barbosa', turma: '3º A', concluidas: 1, pontos: 23 },
+        { nome: 'Davi Luiz Carvalho', turma: '1º B', concluidas: 1, pontos: 42 },
+        { nome: 'Emilly da Conceição', turma: '2º A', concluidas: 4, pontos: 128 },
+        { nome: 'Diego Campos', turma: '2º A', concluidas: 5, pontos: 300 },
+        { nome: 'Samuel Rodrigues', turma: '2º A', concluidas: 4, pontos: 168 },
+        { nome: 'Camila da Rocha', turma: '1º A', concluidas: 2, pontos: 100 },
+        { nome: 'Alícia Duarte', turma: '2º A', concluidas: 5, pontos: 110 },
+        { nome: 'Juan Campos', turma: '3º A', concluidas: 4, pontos: 132 },
+        { nome: 'Daniela Nascimento', turma: '2º B', concluidas: 2, pontos: 50 },
+        { nome: 'João Teixeira', turma: '1º B', concluidas: 0, pontos: 0 },
+        { nome: 'Breno Melo', turma: '1º A', concluidas: 1, pontos: 30 },
+        { nome: 'Lara Nogueira', turma: '2º A', concluidas: 3, pontos: 114 },
+        { nome: 'Emanuella Alves', turma: '2º B', concluidas: 2, pontos: 118 },
+        { nome: 'Ryan Martins', turma: '1º A', concluidas: 1, pontos: 48 },
+        { nome: 'Mariane Caldeira', turma: '2º B', concluidas: 4, pontos: 184 },
+        { nome: 'Cauã Lima', turma: '1º B', concluidas: 3, pontos: 69 },
+        { nome: 'Maysa da Cunha', turma: '2º A', concluidas: 4, pontos: 184 },
+        { nome: 'Joaquim Lima', turma: '2º A', concluidas: 3, pontos: 96 },
+        { nome: 'Manuela da Mota', turma: '1º B', concluidas: 4, pontos: 92 },
+        { nome: 'Rafaela da Cruz', turma: '2º A', concluidas: 3, pontos: 177 },
+        { nome: 'Agatha Dias', turma: '3º A', concluidas: 5, pontos: 240 },
+        { nome: 'Joaquim Costela', turma: '2º B', concluidas: 5, pontos: 125 },
+        { nome: 'Lorenzo Cavalcanti', turma: '1º B', concluidas: 3, pontos: 159 },
+        { nome: 'João Vitor Mendes', turma: '3º A', concluidas: 5, pontos: 175 },
+        { nome: 'Benjamin Carvalho', turma: '1º A', concluidas: 5, pontos: 245 },
+        { nome: 'Samuel Porto', turma: '1º B', concluidas: 1, pontos: 27 },
+        { nome: 'Pietra Moraes', turma: '1º B', concluidas: 5, pontos: 135 },
+        { nome: 'Lucas da Mata', turma: '2º A', concluidas: 1, pontos: 32 },
+        { nome: 'Bianca da Mata', turma: '2º A', concluidas: 5, pontos: 165 },
+        { nome: 'Gustavo Rodrigues', turma: '1º B', concluidas: 0, pontos: 0 },
+        { nome: 'Bruna da Rosa', turma: '2º A', concluidas: 4, pontos: 196 },
+        { nome: 'Pedro Lucas Oliveira', turma: '1º B', concluidas: 4, pontos: 220 },
+        { nome: 'Yuri Sales', turma: '1º A', concluidas: 1, pontos: 47 },
+        { nome: 'Nina da Rocha', turma: '3º A', concluidas: 0, pontos: 0 },
+        { nome: 'Yago Gomes', turma: '2º B', concluidas: 1, pontos: 58 },
+        { nome: 'Caio Lima', turma: '1º A', concluidas: 2, pontos: 48 },
+        { nome: 'Erick Lopes', turma: '3º A', concluidas: 0, pontos: 0 },
+        { nome: 'Lorenzo da Luz', turma: '1º B', concluidas: 4, pontos: 232 },
+        { nome: 'Gabriel Freitas', turma: '1º B', concluidas: 5, pontos: 205 },
+        { nome: 'Vicente Lima', turma: '3º A', concluidas: 3, pontos: 120 },
+        { nome: 'Evelyn Barros', turma: '1º B', concluidas: 2, pontos: 118 },
+        { nome: 'Theo Porto', turma: '1º A', concluidas: 2, pontos: 68 },
+        { nome: 'Breno Santos', turma: '2º B', concluidas: 5, pontos: 195 },
+        { nome: 'João Pedro da Mota', turma: '2º B', concluidas: 5, pontos: 125 },
+        { nome: 'Olivia Freitas', turma: '1º A', concluidas: 5, pontos: 145 },
+        { nome: 'Maria Julia da Luz', turma: '1º A', concluidas: 1, pontos: 35 },
+        { nome: 'Isaac Pires', turma: '3º A', concluidas: 0, pontos: 0 },
+        { nome: 'Lucas Gabriel Barbosa', turma: '2º A', concluidas: 2, pontos: 104 },
+        { nome: 'Heitor Pereira', turma: '3º A', concluidas: 1, pontos: 43 },
+        { nome: 'Benjamin Aragão', turma: '1º A', concluidas: 1, pontos: 22 },
+        { nome: 'Carlos Eduardo Rodrigues', turma: '2º B', concluidas: 2, pontos: 56 },
+        { nome: 'Sophie Gomes', turma: '2º A', concluidas: 4, pontos: 208 },
+        { nome: 'Isaac Mendes', turma: '1º B', concluidas: 0, pontos: 0 },
+        { nome: 'Maria Luiza Cunha', turma: '1º B', concluidas: 5, pontos: 245 },
+        { nome: 'Raul Pereira', turma: '3º A', concluidas: 1, pontos: 59 },
+        { nome: 'Sophie da Mota', turma: '1º B', concluidas: 4, pontos: 200 },
+        { nome: 'Emanuel Farias', turma: '2º B', concluidas: 4, pontos: 180 },
+        { nome: 'João Lucas Cavalcanti', turma: '2º A', concluidas: 4, pontos: 132 },
+        { nome: 'João Guilherme Martins', turma: '1º A', concluidas: 5, pontos: 170 },
+        { nome: 'Stephany Rocha', turma: '1º A', concluidas: 2, pontos: 84 },
+      ];
+      const turmas = [...new Set(dadosFicticios.map(a => a.turma))];
+      turmas.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        filtroTurma.appendChild(opt);
+      });
+
+      function renderizarTabela(turmaSelecionada) {
+        const filtrado = turmaSelecionada
+          ? dadosFicticios.filter(a => a.turma === turmaSelecionada)
+          : dadosFicticios;
+
+        tabela.innerHTML = '';
+        filtrado.forEach(a => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${a.nome}</td>
+            <td>${a.turma}</td>
+            <td>${a.concluidas}</td>
+            <td>${a.pontos}</td>
+          `;
+          tabela.appendChild(tr);
+        });
+      }
+
+      filtroTurma.addEventListener('change', () => {
+        renderizarTabela(filtroTurma.value);
+      });
+
+      renderizarTabela('');
+    });
+  </script>
+</body>
+</html>

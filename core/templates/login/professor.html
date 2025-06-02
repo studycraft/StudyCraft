@@ -29,6 +29,37 @@
         </div>
     </div>
 
-    <script src="{% static 'js/auth.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loginProfessor');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const matricula = document.getElementById('matricula').value;
+                const senha = document.getElementById('senha').value;
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/token/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username: matricula, password: senha })
+                    });
+
+                    if (!response.ok) throw new Error('Credenciais inválidas');
+
+                    const data = await response.json();
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('refresh_token', data.refresh);
+
+                    alert('Login realizado com sucesso!');
+                    window.location.href = '/painel/professor/';
+                } catch (err) {
+                    alert('Erro ao fazer login: ' + err.message);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
