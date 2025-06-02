@@ -2,7 +2,7 @@ from rest_framework import routers
 from django.urls import path, include
 from .views import (
     AlunoViewSet, ProfessorViewSet, TrilhaViewSet,
-    index, login_aluno, login_professor, login_admin, dashboard_admin, cadastro_professor, cadastro_aluno, cadastro_trilha
+    index, login_aluno, login_professor, login_admin, dashboard_admin, cadastro_professor, cadastro_aluno, cadastro_trilha, dashboard_data
 )
 
 router = routers.DefaultRouter()
@@ -22,4 +22,8 @@ urlpatterns = [
     path('painel/professores/', cadastro_professor, name='cadastro_professor'),
     path('painel/alunos/', cadastro_aluno, name='cadastro_aluno'),
     path('painel/trilha/', cadastro_trilha, name='cadastro_trilha'),
+]
+
+urlpatterns += [
+    path('api/admin/dashboard/', dashboard_data, name='dashboard_data'),
 ]

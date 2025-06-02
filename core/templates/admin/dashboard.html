@@ -75,9 +75,7 @@
 
             console.log('Usuário autenticado com token:', token);
 
-            // ✅ Exemplo de fetch (opcional, caso já tenha essa view criada)
-            /*
-            fetch('http://127.0.0.1:8000/api/admin/dashboard/', {
+           fetch('http://127.0.0.1:8000/api/admin/dashboard/', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -103,8 +101,8 @@
                 console.error(err);
                 alert('Erro ao carregar o painel.');
             });
-            */
+
         });
     </script>
-</body>
+    </body>
 </html>

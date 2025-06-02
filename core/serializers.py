@@ -11,7 +11,7 @@ class AlunoSerializer(serializers.ModelSerializer):
 
 class ProfessorSerializer(serializers.ModelSerializer):
     nome = serializers.CharField()
-    email = serializers.EmailField(write_only=True)
+    email = serializers.EmailField(source='user.email')  # <-- aqui está a correção
     senha = serializers.CharField(write_only=True)
 
     class Meta:
@@ -20,8 +20,9 @@ class ProfessorSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         nome = validated_data.pop('nome')
-        email = validated_data.pop('email')
         senha = validated_data.pop('senha')
+        user_data = validated_data.pop('user')
+        email = user_data.get('email')
         matricula = validated_data.get('matricula')
         disciplina = validated_data.get('disciplina')
 
@@ -33,36 +34,35 @@ class ProfessorSerializer(serializers.ModelSerializer):
         )
 
         return Professor.objects.create(
-            nome=nome,              # <--- Salva no Professor também!
+            nome=nome,
             user=user,
             matricula=matricula,
             disciplina=disciplina
         )
 
-
     def update(self, instance, validated_data):
         nome = validated_data.pop('nome', None)
-        email = validated_data.pop('email', None)
         senha = validated_data.pop('senha', None)
-        matricula = validated_data.get('matricula')
-        disciplina = validated_data.get('disciplina')
+        user_data = validated_data.pop('user', {})
+        email = user_data.get('email', None)
 
         user = instance.user
         if nome:
             user.first_name = nome
-            instance.nome = nome      # <--- Atualiza nome do Professor!
+            instance.nome = nome
         if email:
             user.email = email
         if senha:
             user.set_password(senha)
-        user.username = matricula
+        user.username = validated_data.get('matricula', user.username)
         user.save()
 
-        instance.matricula = matricula
-        instance.disciplina = disciplina
+        instance.matricula = validated_data.get('matricula', instance.matricula)
+        instance.disciplina = validated_data.get('disciplina', instance.disciplina)
         instance.save()
 
         return instance
+
 
 
 
@@ -71,12 +71,13 @@ class TrilhaSerializer(serializers.ModelSerializer):
     professor_id = serializers.PrimaryKeyRelatedField(
         queryset=Professor.objects.all(), source='professor', write_only=True
     )
-
-    alunos = AlunoSerializer(many=True, read_only=True)
-    alunos_ids = serializers.PrimaryKeyRelatedField(
-        queryset=Aluno.objects.all(), many=True, source='alunos', write_only=True
-    )
+    disciplina = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Trilha
-        fields = ['id', 'nome', 'disciplina', 'professor', 'professor_id', 'alunos', 'alunos_ids', 'descricao']
+        fields = ['id', 'nome', 'codigo', 'disciplina', 'professor', 'professor_id', 'descricao']
+        read_only_fields = ['codigo']
+
+    def get_disciplina(self, obj):
+        return obj.professor.disciplina if obj.professor else ''
+

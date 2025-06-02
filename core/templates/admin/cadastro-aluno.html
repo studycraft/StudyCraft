@@ -28,32 +28,23 @@
 
         <main class="content">
             <h1><i class="fas fa-user-graduate"></i> Cadastrar Aluno</h1>
-            
-        <form id="form-aluno">
-            <div class="form-group">
-                <label for="nome"><i class="fas fa-user"></i> Nome Completo:</label>
-                <input type="text" id="nome" required placeholder="Ex: João da Silva">
-            </div>
-            <div class="form-group">
-                <label for="ra"><i class="fas fa-id-card"></i> RA:</label>
-                <input type="text" id="ra" required pattern="ALU\d{5}" 
-                    title="Formato: ALU + 5 dígitos (Ex: ALU12345)" placeholder="Ex: ALU12345">
-            </div>
-            <div class="form-group">
-                <label for="turma"><i class="fas fa-users"></i> Turma:</label>
-                <input type="text" id="turma" required placeholder="Ex: 3º Ano B">
-            </div>
-            <div class="form-group">
-                <label for="trilha"><i class="fas fa-project-diagram"></i> Trilhas:</label>
-                <select id="trilha" multiple>
-                    <option value="Front-End">Front-End</option>
-                    <option value="Back-End">Back-End</option>
-                    <option value="Data Science">Data Science</option>
-                </select>
-            </div>
-            <button type="submit" class="btn"><i class="fas fa-save"></i> Cadastrar</button>
-        </form>
 
+            <form id="form-aluno">
+                <div class="form-group">
+                    <label for="nome"><i class="fas fa-user"></i> Nome Completo:</label>
+                    <input type="text" id="nome" required placeholder="Ex: João da Silva">
+                </div>
+                <div class="form-group">
+                    <label for="ra"><i class="fas fa-id-card"></i> RA:</label>
+                    <input type="text" id="ra" required pattern="ALU\d{5}" 
+                        title="Formato: ALU + 5 dígitos (Ex: ALU12345)" placeholder="Ex: ALU12345">
+                </div>
+                <div class="form-group">
+                    <label for="turma"><i class="fas fa-users"></i> Turma:</label>
+                    <input type="text" id="turma" required placeholder="Ex: 3º Ano B">
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-save"></i> Cadastrar</button>
+            </form>
 
             <div class="tabela-container">
                 <h2><i class="fas fa-list"></i> Alunos Cadastrados</h2>
@@ -63,12 +54,12 @@
                             <th>Nome</th>
                             <th>RA</th>
                             <th>Turma</th>
-                            <th>Trilhas</th>
+                            <th>Ações</th> <!-- nova coluna -->
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4">Carregando alunos...</td>
+                            <td colspan="3">Carregando alunos...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -77,7 +68,6 @@
     </div>
 
     <script src="{% static 'js/admin.js' %}"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('access_token');
@@ -89,6 +79,36 @@
 
             const form = document.getElementById('form-aluno');
             const tabela = document.querySelector('#tabela-alunos tbody');
+
+            function editarAluno(id, nome, ra, turma) {
+                document.getElementById('nome').value = nome;
+                document.getElementById('ra').value = ra;
+                document.getElementById('turma').value = turma;
+                form.setAttribute('data-id', id);
+            }
+
+            function excluirAluno(id) {
+                if (!confirm("Tem certeza que deseja excluir este aluno?")) return;
+
+                fetch(`http://127.0.0.1:8000/api/alunos/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        alert("Aluno excluído com sucesso!");
+                        carregarAlunos();
+                    } else {
+                        alert("Erro ao excluir o aluno.");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Erro ao excluir o aluno.");
+                });
+            }
 
             function carregarAlunos() {
                 fetch('http://127.0.0.1:8000/api/alunos/', {
@@ -105,8 +125,17 @@
                             <td>${aluno.nome}</td>
                             <td>${aluno.ra}</td>
                             <td>${aluno.turma}</td>
-                            <td>${aluno.trilhas.join(', ')}</td>
+                            <td>
+                                <button class="btn btn-small btn-editar"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-small btn-excluir"><i class="fas fa-trash-alt"></i></button>
+                            </td>
                         `;
+                        tr.querySelector('.btn-editar').addEventListener('click', () => {
+                            editarAluno(aluno.id, aluno.nome, aluno.ra, aluno.turma);
+                        });
+                        tr.querySelector('.btn-excluir').addEventListener('click', () => {
+                            excluirAluno(aluno.id);
+                        });
                         tabela.appendChild(tr);
                     });
                 })
@@ -121,33 +150,43 @@
                 const nome = document.getElementById('nome').value;
                 const ra = document.getElementById('ra').value;
                 const turma = document.getElementById('turma').value;
-                const trilhas = Array.from(document.getElementById('trilha').selectedOptions).map(opt => opt.value);
 
-                fetch('http://127.0.0.1:8000/api/alunos/', {
-                    method: 'POST',
+                const alunoId = form.getAttribute('data-id');
+                const metodo = alunoId ? 'PUT' : 'POST';
+                const url = alunoId
+                    ? `http://127.0.0.1:8000/api/alunos/${alunoId}/`
+                    : 'http://127.0.0.1:8000/api/alunos/';
+
+                fetch(url, {
+                    method: metodo,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ nome, ra, turma, trilhas })
+                    body: JSON.stringify({ nome, ra, turma })
                 })
                 .then(res => {
                     if (res.ok) {
-                        alert('Aluno cadastrado com sucesso!');
+                        alert(alunoId ? 'Aluno atualizado com sucesso!' : 'Aluno cadastrado com sucesso!');
                         form.reset();
+                        form.removeAttribute('data-id');
                         carregarAlunos();
                     } else {
-                        alert('Erro ao cadastrar aluno.');
+                        res.json().then(err => {
+                            console.error(err);
+                            alert('Erro: ' + JSON.stringify(err));
+                        });
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Erro ao cadastrar aluno.');
+                    alert('Erro ao salvar os dados do aluno.');
                 });
             });
 
             carregarAlunos();
         });
     </script>
+
 </body>
 </html>

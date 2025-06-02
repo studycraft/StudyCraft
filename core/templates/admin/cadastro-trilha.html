@@ -1,4 +1,5 @@
 {% load static %}
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +8,6 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 </head>
 <body>
     <div class="admin-container">
@@ -35,16 +35,12 @@
                     <input type="text" id="nome" required placeholder="Ex: Matemática Avançada">
                 </div>
                 <div class="form-group">
-                    <label for="disciplina"><i class="fas fa-graduation-cap"></i> Disciplina:</label>
-                    <input type="text" id="disciplina" required placeholder="Ex: Matemática">
-                </div>
-                <div class="form-group">
                     <label for="professor"><i class="fas fa-chalkboard-teacher"></i> Professor Responsável:</label>
                     <select id="professor" required></select>
                 </div>
                 <div class="form-group">
-                    <label for="alunos"><i class="fas fa-users"></i> Alunos Participantes:</label>
-                    <select id="alunos" class="alunos-select" multiple="multiple"></select>
+                    <label for="disciplina"><i class="fas fa-graduation-cap"></i> Disciplina:</label>
+                    <input type="text" id="disciplina" readonly placeholder="Será preenchido ao selecionar o professor">
                 </div>
                 <div class="form-group">
                     <label for="descricao"><i class="fas fa-align-left"></i> Descrição:</label>
@@ -59,14 +55,15 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
+                            <th>Código</th>
                             <th>Disciplina</th>
                             <th>Professor</th>
-                            <th>Alunos</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4">Carregando trilhas...</td>
+                            <td colspan="5">Carregando trilhas...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -74,9 +71,7 @@
         </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{% static 'js/admin.js' %}"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('access_token');
@@ -86,15 +81,12 @@
                 return;
             }
 
-            $('.alunos-select').select2({
-                placeholder: "Selecione os alunos",
-                width: '100%'
-            });
-
             const professorSelect = document.getElementById('professor');
-            const alunosSelect = document.getElementById('alunos');
+            const disciplinaInput = document.getElementById('disciplina');
             const tabela = document.querySelector('#tabela-trilhas tbody');
             const form = document.getElementById('form-trilha');
+
+            let professores = [];
 
             function carregarProfessores() {
                 fetch('http://127.0.0.1:8000/api/professores/', {
@@ -102,31 +94,22 @@
                 })
                 .then(res => res.json())
                 .then(data => {
+                    professores = data;
                     professorSelect.innerHTML = '';
                     data.forEach(p => {
                         const opt = document.createElement('option');
                         opt.value = p.id;
-                        opt.textContent = `${p.nome} (${p.disciplina})`;
+                        opt.textContent = `${p.nome} (${p.matricula})`;
                         professorSelect.appendChild(opt);
                     });
                 });
             }
 
-            function carregarAlunos() {
-                fetch('http://127.0.0.1:8000/api/alunos/', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    alunosSelect.innerHTML = '';
-                    data.forEach(a => {
-                        const opt = document.createElement('option');
-                        opt.value = a.id;
-                        opt.textContent = `${a.nome} (${a.turma})`;
-                        alunosSelect.appendChild(opt);
-                    });
-                });
-            }
+            professorSelect.addEventListener('change', () => {
+                const idSelecionado = parseInt(professorSelect.value);
+                const prof = professores.find(p => p.id === idSelecionado);
+                disciplinaInput.value = prof ? prof.disciplina : '';
+            });
 
             function carregarTrilhas() {
                 fetch('http://127.0.0.1:8000/api/trilhas/', {
@@ -139,47 +122,80 @@
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${t.nome}</td>
+                            <td>${t.codigo}</td>
                             <td>${t.disciplina}</td>
                             <td>${t.professor.nome}</td>
-                            <td>${t.alunos.map(a => a.nome).join(', ')}</td>
+                            <td>
+                                <button class="btn btn-small btn-editar"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-small btn-excluir"><i class="fas fa-trash-alt"></i></button>
+                            </td>
                         `;
+                        tr.querySelector('.btn-editar').addEventListener('click', () => {
+                            document.getElementById('nome').value = t.nome;
+                            document.getElementById('descricao').value = t.descricao || '';
+                            professorSelect.value = t.professor.id;
+                            disciplinaInput.value = t.disciplina;
+                            form.setAttribute('data-id', t.id);
+                        });
+                        tr.querySelector('.btn-excluir').addEventListener('click', () => {
+                            if (confirm("Deseja realmente excluir esta trilha?")) {
+                                fetch(`http://127.0.0.1:8000/api/trilhas/${t.id}/`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                }).then(res => {
+                                    if (res.ok) {
+                                        alert("Trilha excluída com sucesso!");
+                                        carregarTrilhas();
+                                    } else {
+                                        alert("Erro ao excluir trilha.");
+                                    }
+                                });
+                            }
+                        });
                         tabela.appendChild(tr);
                     });
-                })
-                .catch(() => {
-                    tabela.innerHTML = '<tr><td colspan="4">Erro ao carregar trilhas.</td></tr>';
                 });
             }
 
             form.addEventListener('submit', e => {
                 e.preventDefault();
                 const nome = document.getElementById('nome').value;
-                const disciplina = document.getElementById('disciplina').value;
-                const professor = professorSelect.value;
-                const alunos = Array.from(alunosSelect.selectedOptions).map(opt => opt.value);
+                const professor_id = professorSelect.value;
                 const descricao = document.getElementById('descricao').value;
 
-                fetch('http://127.0.0.1:8000/api/trilhas/', {
-                    method: 'POST',
+                const trilhaId = form.getAttribute('data-id');
+                const url = trilhaId
+                    ? `http://127.0.0.1:8000/api/trilhas/${trilhaId}/`
+                    : `http://127.0.0.1:8000/api/trilhas/`;
+                const method = trilhaId ? 'PUT' : 'POST';
+
+                fetch(url, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ nome, disciplina, professor, alunos, descricao })
+                    body: JSON.stringify({ nome, professor_id, descricao })
                 })
                 .then(res => {
                     if (res.ok) {
-                        alert('Trilha criada com sucesso!');
+                        alert(trilhaId ? 'Trilha atualizada!' : 'Trilha criada com sucesso!');
                         form.reset();
+                        disciplinaInput.value = '';
+                        form.removeAttribute('data-id');
                         carregarTrilhas();
                     } else {
-                        alert('Erro ao criar trilha.');
+                        res.json().then(err => {
+                            console.error(err);
+                            alert('Erro ao salvar trilha.');
+                        });
                     }
                 });
             });
 
             carregarProfessores();
-            carregarAlunos();
             carregarTrilhas();
         });
     </script>
