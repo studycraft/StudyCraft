@@ -100,7 +100,7 @@
             function excluirProfessor(id) {
                 if (!confirm("Tem certeza que deseja excluir este professor?")) return;
 
-                fetch(`http://127.0.0.1:8000/api/professores/${id}/`, {
+                fetch(`${window.location.origin}/api/professores/${id}/`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -121,7 +121,7 @@
             }
 
             function carregarProfessores() {
-                fetch('http://127.0.0.1:8000/api/professores/', {
+                fetch(`${window.location.origin}/api/professores/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -165,7 +165,7 @@
             function excluirProfessor(id) {
                 if (!confirm('Tem certeza que deseja excluir este professor?')) return;
 
-                fetch(`http://127.0.0.1:8000/api/professores/${id}/`, {
+                fetch(`${window.location.origin}/api/professores/${id}/`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -196,8 +196,8 @@
                 const professorId = form.getAttribute('data-id');
                 const metodo = professorId ? 'PUT' : 'POST';
                 const url = professorId
-                    ? `http://127.0.0.1:8000/api/professores/${professorId}/`
-                    : 'http://127.0.0.1:8000/api/professores/';
+                    ? `${window.location.origin}/api/professores/${professorId}/`
+                    : `${window.location.origin}/api/professores/`;
 
                 fetch(url, {
                     method: metodo,

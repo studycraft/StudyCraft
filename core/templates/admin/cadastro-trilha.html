@@ -89,7 +89,7 @@
             let professores = [];
 
             function carregarProfessores() {
-                fetch('http://127.0.0.1:8000/api/professores/', {
+                fetch(`${window.location.origin}/api/professores/`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(res => res.json())
@@ -112,7 +112,7 @@
             });
 
             function carregarTrilhas() {
-                fetch('http://127.0.0.1:8000/api/trilhas/', {
+                fetch(`${window.location.origin}/api/trilhas/`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(res => res.json())
@@ -139,7 +139,7 @@
                         });
                         tr.querySelector('.btn-excluir').addEventListener('click', () => {
                             if (confirm("Deseja realmente excluir esta trilha?")) {
-                                fetch(`http://127.0.0.1:8000/api/trilhas/${t.id}/`, {
+                                fetch(`${window.location.origin}/api/trilhas/${t.id}/`, {
                                     method: 'DELETE',
                                     headers: {
                                         'Authorization': `Bearer ${token}`
@@ -167,8 +167,8 @@
 
                 const trilhaId = form.getAttribute('data-id');
                 const url = trilhaId
-                    ? `http://127.0.0.1:8000/api/trilhas/${trilhaId}/`
-                    : `http://127.0.0.1:8000/api/trilhas/`;
+                    ? `${window.location.origin}/api/trilhas/${trilhaId}/`
+                    : `${window.location.origin}/api/trilhas/`;
                 const method = trilhaId ? 'PUT' : 'POST';
 
                 fetch(url, {

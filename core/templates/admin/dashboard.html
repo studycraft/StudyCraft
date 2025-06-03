@@ -75,7 +75,7 @@
 
             console.log('Usuário autenticado com token:', token);
 
-           fetch('http://127.0.0.1:8000/api/admin/dashboard/', {
+           fetch(`${window.location.origin}/api/admin/dashboard/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

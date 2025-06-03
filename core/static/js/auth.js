@@ -1,6 +1,6 @@
 async function login(username, password, redirectUrl) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/token/', {
+        const response = await fetch(`${window.location.origin}/api/token/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ if (alunoForm) {
         event.preventDefault();
         const username = document.getElementById('ra').value;
         const password = document.getElementById('senha').value;
-        login(username, password, '/painel/aluno/');  // ✅ caminho absoluto e padronizado
+        login(username, password, '/painel/aluno/');
     });
 }
 
@@ -43,7 +43,7 @@ if (professorForm) {
         event.preventDefault();
         const username = document.getElementById('matricula').value;
         const password = document.getElementById('senha').value;
-        login(username, password, '/painel/professor/');  // ✅ caminho absoluto
+        login(username, password, '/painel/professor/');
     });
 }
 
@@ -54,6 +54,6 @@ if (adminForm) {
         event.preventDefault();
         const username = document.getElementById('matricula').value;
         const password = document.getElementById('senha').value;
-        login(username, password, '/painel/admin/');  // ✅ corrigido: era /admin/dashboard/
+        login(username, password, '/painel/admin/');
     });
 }

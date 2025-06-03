@@ -90,7 +90,7 @@
             function excluirAluno(id) {
                 if (!confirm("Tem certeza que deseja excluir este aluno?")) return;
 
-                fetch(`http://127.0.0.1:8000/api/alunos/${id}/`, {
+                fetch(`${window.location.origin}/api/alunos/`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -111,7 +111,7 @@
             }
 
             function carregarAlunos() {
-                fetch('http://127.0.0.1:8000/api/alunos/', {
+                fetch(`${window.location.origin}/api/alunos/${id}/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -154,8 +154,8 @@
                 const alunoId = form.getAttribute('data-id');
                 const metodo = alunoId ? 'PUT' : 'POST';
                 const url = alunoId
-                    ? `http://127.0.0.1:8000/api/alunos/${alunoId}/`
-                    : 'http://127.0.0.1:8000/api/alunos/';
+                    ? `${window.location.origin}/api/alunos/${alunoId}/`
+                    : `${window.location.origin}/api/alunos/`;
 
                 fetch(url, {
                     method: metodo,
