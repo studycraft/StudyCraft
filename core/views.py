@@ -57,6 +57,12 @@ def cadastro_aventura(request):
 def relatorio_engajamento(request):
     return render(request, 'professor/relatorio-engajamento.html')
 
+def painel_aventuras(request):
+    return render(request, 'aluno/painel-aventuras.html')
+
+def painel_progresso(request):
+    return render(request, 'aluno/painel-progresso.html')
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

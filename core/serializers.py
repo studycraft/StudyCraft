@@ -9,6 +9,20 @@ class AlunoSerializer(serializers.ModelSerializer):
         model = Aluno
         fields = '__all__'
 
+    def create(self, validated_data):
+        ra = validated_data['ra']
+        nome = validated_data['nome']
+
+        # Cria um usuário se ainda não existir
+        if not Usuario.objects.filter(username=ra).exists():
+            Usuario.objects.create_user(
+                username=ra,
+                password=ra,  # senha = RA
+                first_name=nome
+            )
+
+        return super().create(validated_data)
+
 class ProfessorSerializer(serializers.ModelSerializer):
     nome = serializers.CharField()
     email = serializers.EmailField(source='user.email')  # <-- aqui está a correção

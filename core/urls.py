@@ -3,7 +3,8 @@ from django.urls import path, include
 from .views import (
     AlunoViewSet, ProfessorViewSet, TrilhaViewSet,
     index, login_aluno, login_professor, login_admin, dashboard_admin, cadastro_professor, 
-    cadastro_aluno, cadastro_trilha, dashboard_data, painel_professor, cadastro_aventura, relatorio_engajamento
+    cadastro_aluno, cadastro_trilha, dashboard_data, painel_professor, cadastro_aventura, relatorio_engajamento,
+    painel_aventuras, painel_progresso,
 )
 
 router = routers.DefaultRouter()
@@ -26,6 +27,8 @@ urlpatterns = [
     path('painel/professor/', painel_professor, name='dashboard_professor'),
     path('painel/professor/aventura/', cadastro_aventura, name='cadastro_aventura'),
     path('painel/professor/relatorio/', relatorio_engajamento, name='relatorio_engajamento'),
+    path('painel/aluno/', painel_aventuras, name='painel_aventuras'),
+    path('painel/aluno/progresso/', painel_progresso, name='painel_progresso'),
 
 ]
 

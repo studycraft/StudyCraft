@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyCraft - Minhas Aventuras</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar do aluno -->
+    <aside class="sidebar">
+      <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+      <nav>
+        <ul>
+          <li><a href="{% url 'painel_aventuras' %}" class="active"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
+          <li><a href="{% url 'painel_progresso' %}"><i class="fas fa-trophy"></i> Meu Progresso</a></li>
+        </ul>
+      </nav>
+      <button class="btn" onclick="window.location.href='/'">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
+    </aside>
+
+    <!-- Conteúdo -->
+    <main class="content">
+      <h1><i class="fas fa-scroll"></i> Aventuras Pendentes</h1>
+
+      <div class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Trilha</th>
+              <th>Prazo</th>
+              <th>Entregar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Operações com Números Inteiros</td>
+              <td>Matemática - Fundamentos</td>
+              <td>15/06/2025</td>
+              <td>
+                <input type="file" id="arquivo1">
+                <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Unidades de Medida</td>
+              <td>Matemática - Aplicações</td>
+              <td>18/06/2025</td>
+              <td>
+                <input type="file" id="arquivo2">
+                <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Álgebra Básica</td>
+              <td>Matemática - Lógica</td>
+              <td>21/06/2025</td>
+              <td>
+                <input type="file" id="arquivo3">
+                <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
