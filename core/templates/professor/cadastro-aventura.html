@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'css/admin.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
   <div class="admin-container">
@@ -73,15 +74,58 @@
           <i class="fas fa-save"></i> Salvar Aventura
         </button>
       </form>
+
+      <hr style="margin: 40px 0;">
+
+      <h2><i class="fas fa-scroll"></i> Aventuras Cadastradas</h2>
+      <div class="tabela-container" style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Trilha</th>
+              <th>Pontuação</th>
+              <th>Prazo</th>
+              <th>Turma</th>
+              <th>Arquivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Valor Numérico</td>
+              <td>Funções Quadráticas</td>
+              <td>30 pts</td>
+              <td>04/07/2025</td>
+              <td>3º Ano A</td>
+              <td>
+                <a href="{% static 'pdfs/valor_numerico.pdf' %}" download>
+                  <i class="fas fa-file-download"></i> PDF
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>Permutação com Repetição</td>
+              <td>Análise Combinatória</td>
+              <td>20 pts</td>
+              <td>30/06/2025</td>
+              <td>3º Ano A</td>
+              <td>
+                <a href="{% static 'pdfs/permutacao_com_repeticao.pdf' %}" download>
+                  <i class="fas fa-file-download"></i> PDF
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // TODO: substituir por fetch real de trilhas do professor
       const trilhaSelect = document.getElementById('trilha');
-      trilhaSelect.innerHTML += '<option value="1">Matemática - Lógica</option>';
-      trilhaSelect.innerHTML += '<option value="2">Física - Introdução</option>';
+      trilhaSelect.innerHTML += '<option value="1">Funções Quadráticas</option>';
+      trilhaSelect.innerHTML += '<option value="2">Análise Combinatória</option>';
     });
   </script>
 </body>

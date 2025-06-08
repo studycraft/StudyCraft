@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'css/admin.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
   <div class="admin-container">
@@ -43,6 +44,52 @@
           <p>420</p>
         </div>
       </div>
+
+      <!-- Barra de Progresso -->
+      <section style="margin-top: 30px;">
+        <h2><i class="fas fa-gift"></i> Progresso para próxima recompensa</h2>
+        <div style="background: #ddd; border-radius: 10px; overflow: hidden; height: 25px; width: 100%; margin: 10px 0;">
+          <div style="width: 70%; background: linear-gradient(to right, #00b09b, #96c93d); height: 100%; text-align: center; color: white; line-height: 25px;">
+            420 / 600 pts
+          </div>
+        </div>
+        <p style="font-size: 16px;">🎯 Faltam <strong>180 pontos</strong> para desbloquear a próxima recompensa!</p>
+      </section>
+
+      <!-- Legenda de Recompensas -->
+      <section style="margin-top: 40px;">
+        <h2><i class="fas fa-medal"></i> Recompensas por Pontuação</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <thead>
+            <tr style="background-color: #f0f0f0;">
+              <th style="padding: 10px; border: 1px solid #ccc;">Pontuação</th>
+              <th style="padding: 10px; border: 1px solid #ccc;">Recompensa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ccc;">100 pts</td>
+              <td style="padding: 10px; border: 1px solid #ccc;">🥉 Insígnia de Iniciante</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ccc;">250 pts</td>
+              <td style="padding: 10px; border: 1px solid #ccc;">🏅 Medalha de Persistência</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ccc;">400 pts</td>
+              <td style="padding: 10px; border: 1px solid #ccc;">🎁 Missão Bônus com Pontos Extras</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ccc;">600 pts</td>
+              <td style="padding: 10px; border: 1px solid #ccc;">🏆 Título "Explorador da Trilha"</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ccc;">1000 pts</td>
+              <td style="padding: 10px; border: 1px solid #ccc;">🎖️ Medalha de Aluno Destaque (entregue pela escola)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   </div>
 </body>
