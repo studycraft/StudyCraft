@@ -1,128 +1,67 @@
-# StudyCraft
+# 📚 StudyCraft
 
-**Aprender nunca foi tão divertido!**
-
-Plataforma gamificada de aprendizagem desenvolvida por estudantes da 16ª GRE - Pio IX, como solução educacional para o Seduckathon. A proposta transforma tarefas escolares em aventuras, estimulando o engajamento por meio de trilhas, pontuações, rankings e recompensas.
+StudyCraft é uma plataforma gamificada de ensino desenvolvida para engajar estudantes com base em missões, trilhas, rankings e recompensas. A aplicação utiliza Django (backend com DRF) e HTML/CSS/JS (frontend), com foco em acessibilidade e aplicação em escolas públicas.
 
 ---
 
-## 🎯 Objetivo
+## 📁 Estrutura do Projeto
 
-Combater o desinteresse escolar com uma ferramenta inovadora, acessível e divertida, integrando recursos de gamificação ao processo educacional.
+A seguir, uma síntese das principais pastas e arquivos do projeto:
+
+```
+.
+├── db.sqlite3               # Banco de dados local (SQLite, usado para testes e desenvolvimento)
+├── manage.py                # Utilitário de linha de comando do Django para gerenciar o projeto
+├── requirements.txt         # Lista de dependências Python do projeto
+│
+├── studycraft_backend/      # Configurações principais do projeto Django
+│   ├── settings.py          # Configurações globais (apps, middleware, banco, static, etc.)
+│   ├── urls.py              # Roteamento principal da aplicação
+│   ├── asgi.py / wsgi.py    # Pontos de entrada para servidores ASGI/WSGI
+│
+├── core/                    # Aplicação principal da lógica do projeto
+│   ├── models.py            # Modelos de dados (Aluno, Professor, Trilha, etc.)
+│   ├── serializers.py       # Serializadores DRF para conversão entre JSON e modelos
+│   ├── views.py             # Views que tratam as requisições e lógica da API
+│   ├── urls.py              # Rotas específicas do app `core`
+│   ├── admin.py             # Registro de modelos no painel administrativo do Django
+│   ├── migrations/          # Histórico de versões do banco de dados
+│   ├── static/              # Arquivos estáticos (CSS, JS, imagens)
+│   │   ├── css/             # Estilos personalizados por tipo de usuário (admin, aluno, etc.)
+│   │   ├── js/              # Scripts JS específicos para autenticação e interações
+│   │   └── images/          # Logos e recursos visuais
+│   ├── templates/           # Páginas HTML organizadas por tipo de usuário
+│   │   ├── login/           # Telas de login para aluno, professor e admin
+│   │   ├── admin/           # Dashboard e cadastros (aluno, professor, trilha)
+│   │   ├── aluno/           # Painéis de aventuras e progresso do aluno
+│   │   └── professor/       # Dashboard e ferramentas do professor
+│
+├── venv/                    # Ambiente virtual Python com bibliotecas instaladas
+```
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
+- **Backend**: Django + Django REST Framework
 - **Frontend**: HTML5, CSS3, JavaScript
-- **Backend**: Python 3.11, Django, Django REST Framework
+- **Banco de Dados**: SQLite (desenvolvimento)
 - **Autenticação**: JWT (JSON Web Token)
-- **Banco de Dados**: SQLite (modo local) / PostgreSQL (produção)
-- **APIs**: RESTful
+- **Outros**: Ambiente virtual (`venv`), estrutura modular e DRY
 
 ---
 
-## 🧱 Estrutura do Projeto
+## 🧩 Funcionalidades (em desenvolvimento)
 
-```bash
-studycraft/
-├── core/                  # Lógica principal do backend
-│   ├── models.py          # Modelos: Aluno, Professor, Trilha, Aventura
-│   ├── views.py           # ViewSets e lógicas da API
-│   ├── serializers.py     # Serializadores DRF
-│   └── urls.py            # Rotas da aplicação
-├── static/                # Arquivos estáticos (CSS, JS, imagens, PDFs)
-│   ├── css/
-│   ├── js/
-│   ├── images/
-│   └── pdfs/
-├── templates/             # Frontend HTML
-│   ├── admin/             # Telas de coordenação
-│   ├── aluno/             # Telas do aluno
-│   ├── professor/         # Telas do professor
-│   └── login/             # Telas de autenticação
-├── db.sqlite3             # Banco local (desenvolvimento)
-└── manage.py              # Gerenciador Django
-```
+- Cadastro e login para alunos, professores e coordenação
+- Painel do aluno com progresso, aventuras e ranking
+- Painel do professor com visualização de engajamento e criação de trilhas
+- Dashboard da coordenação com gerenciamento de usuários e trilhas
+- Sistema de recompensas baseado em missões escolares
 
 ---
 
-## 📚 Funcionalidades
+## 📌 Observações
 
-- Autenticação de Aluno, Professor e Coordenação
-- Cadastro de trilhas e aventuras (tarefas)
-- Upload/download de PDFs de atividades
-- Registro de entregas de alunos
-- Barra de progresso e pontuação por recompensa
-- Interface responsiva e acessível
-
----
-
-## 🔐 Autenticação (JWT)
-
-Endpoint de login:
-```http
-POST /api/token/
-Body: {
-  "username": "usuario",
-  "password": "senha"
-}
-```
-
-Headers para autenticação:
-```
-Authorization: Bearer <access_token>
-```
-
----
-
-## 🔄 Endpoints da API (exemplos)
-
-| Método | Rota                  | Descrição                   |
-|--------|-----------------------|-----------------------------|
-| POST   | /api/token/           | Login (retorna JWT)         |
-| GET    | /api/alunos/          | Lista de alunos             |
-| GET    | /api/professores/     | Lista de professores        |
-| GET    | /api/trilhas/         | Lista de trilhas educacionais |
-| POST   | /api/aventuras/       | Criação de nova aventura    |
-
----
-
-## ▶️ Executando localmente
-
-```bash
-# Instale as dependências
-pip install -r requirements.txt
-
-# Aplique as migrações
-python manage.py migrate
-
-# Rode o servidor
-python manage.py runserver
-```
-
-Acesse em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
----
-
-## 👥 Equipe (16ª GRE - CETI Nossa Senhora do Patrocínio)
-
-- Amanda Rafaela Batista Arrais
-- Carlos Wanderson Ferreira de Sousa Sudário
-- Francisco Rodrigo da Silva
-- Maria Beatriz dos Santos Silva
-- Maria Yasmin Alves
-
-**Orientador:** Prof. José Diógenes Vieira da Costa
-
----
-
-## 🏁 Status
-
-🟢 Em desenvolvimento. Funcionalidades principais operacionais. Integração dinâmica das telas de aluno e professor em andamento.
-
----
-
-## 📜 Licença
-
-Projeto educacional de uso público. Livre para replicação em escolas e iniciativas sociais.
+- Toda a lógica de cadastro e manipulação de dados está conectada à API RESTful.
+- O projeto está em desenvolvimento no contexto do **2º SEDUCKATHON** com foco em escolas públicas do Piauí.
