@@ -135,5 +135,8 @@ Acesse em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ## 📜 Licença
 
-Projeto educacional de uso público. Livre para replicação em escolas e iniciativas sociais.
-Pio IX - 2025
+Este projeto é de propriedade da equipe StudyCraft.  
+O uso, cópia, distribuição ou modificação do sistema só é permitido mediante contrato de licença com os autores.  
+Para parcerias ou aquisição comercial, entre em contato com a equipe responsável.
+
+studycraft.2025@gmail.com
