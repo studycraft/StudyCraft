@@ -136,3 +136,4 @@ Acesse em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 ## 📜 Licença
 
 Projeto educacional de uso público. Livre para replicação em escolas e iniciativas sociais.
+Pio IX - 2025
