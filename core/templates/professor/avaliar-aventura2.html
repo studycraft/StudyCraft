@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyCraft - Avaliar Aventura</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Menu lateral do professor -->
+    <aside class="sidebar">
+      <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+      <nav>
+        <ul>
+          <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li><a href="{% url 'listar_aventura' %}" class="active"><i class="fas fa-tasks"></i> Aventuras</a></li>
+          <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+        </ul>
+      </nav>
+      <button class="btn" onclick="window.location.href='/'">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
+    </aside>
+
+    <!-- Conteúdo -->
+    <main class="content">
+      <h1><i class="fas fa-star"></i> Avaliar Aventura: Permutação com Repetição</h1>
+
+      <section class="formulario">
+        <p><strong>Trilha:</strong> Análise Combinatória</p>
+        <p><strong>Turma:</strong> 3º Ano A</p>
+        <p><strong>Prazo de Entrega:</strong> 18/06/2025</p>
+
+        <h2>Entregas dos Alunos</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Aluno</th>
+              <th>Data de Entrega</th>
+              <th>Arquivo</th>
+              <th>Avaliação</th>
+              <th>Pontuação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Amanda Arrais</td>
+              <td>17/06/2025</td>
+              <td><a href="#"><i class="fas fa-file-pdf"></i> Download</a></td>
+              <td>
+                <select>
+                  <option>Selecionar</option>
+                  <option>Correto</option>
+                  <option>Parcialmente correto</option>
+                  <option>Incorreto</option>
+                </select>
+              </td>
+              <td><input type="number" min="0" max="100" value="100"></td>
+            </tr>
+            <tr>
+              <td>Maria Beatriz</td>
+              <td>18/06/2025</td>
+              <td><a href="#"><i class="fas fa-file-pdf"></i> Download</a></td>
+              <td>
+                <select>
+                  <option>Selecionar</option>
+                  <option>Correto</option>
+                  <option>Parcialmente correto</option>
+                  <option>Incorreto</option>
+                </select>
+              </td>
+              <td><input type="number" min="0" max="100"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 20px; text-align: right;">
+          <button class="btn"><i class="fas fa-save"></i> Salvar Avaliações</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -63,6 +63,15 @@ def painel_aventuras(request):
 def painel_progresso(request):
     return render(request, 'aluno/painel-progresso.html')
 
+def listar_aventuras(request):
+    return render(request, 'professor/listar-aventuras.html')
+
+def avaliar_aventura1(request):
+    return render(request, 'professor/avaliar-aventura1.html')
+
+def avaliar_aventura2(request):
+    return render(request, 'professor/avaliar-aventura2.html')
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
