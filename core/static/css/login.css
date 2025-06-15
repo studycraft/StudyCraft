@@ -1,4 +1,14 @@
-/* Estilos específicos para login */
+/* Estilos para as telas de login: Admin, Aluno e Professor (Desktop) */
+
+/* Reset e fonte padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Container geral centralizado */
 .login-container {
     display: flex;
     justify-content: center;
@@ -7,6 +17,7 @@
     background-color: #f0f2f5;
 }
 
+/* Caixa do formulário */
 .login-box {
     background: white;
     padding: 30px;
@@ -17,11 +28,14 @@
     text-align: center;
 }
 
+/* Título */
 .login-box h2 {
     margin-bottom: 20px;
     color: #2c3e50;
+    font-size: 24px;
 }
 
+/* Grupo de entrada */
 .input-group {
     margin-bottom: 15px;
     text-align: left;
@@ -32,6 +46,7 @@
     margin-bottom: 5px;
     font-weight: bold;
     color: #34495e;
+    font-size: 16px;
 }
 
 .input-group input {
@@ -42,13 +57,53 @@
     font-size: 16px;
 }
 
+/* Botões personalizados para cada tipo de login */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    color: white;
+}
+
+.btn.professor {
+    background-color: #057931;
+}
+
+.btn.aluno {
+    background-color: #074EA2;
+}
+
+.btn.admin {
+    background-color: #EF4023;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Link de retorno */
 .back-link {
     display: inline-block;
     margin-top: 15px;
     color: #7f8c8d;
     text-decoration: none;
+    font-size: 14px;
 }
 
 .back-link:hover {
     text-decoration: underline;
+}
+
+/* Logo pequena no topo */
+.logo-small {
+    max-width: 120px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
 }
