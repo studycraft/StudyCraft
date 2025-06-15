@@ -10,6 +10,21 @@
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
+  <div class="mobile-header">
+    <div class="mobile-header-inner">
+      <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+      <button class="hamburger" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobileMenu">
+      <ul>
+        <li><a href="{% url 'painel_aventuras' %}"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
+        <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+      </ul>
+    </nav>
+  </div>
+
   <div class="admin-container">
     <!-- Sidebar do aluno -->
     <aside class="sidebar">
@@ -58,38 +73,47 @@
       <!-- Legenda de Recompensas -->
       <section style="margin-top: 40px;">
         <h2><i class="fas fa-medal"></i> Recompensas por Pontuação</h2>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-          <thead>
-            <tr style="background-color: #f0f0f0;">
-              <th style="padding: 10px; border: 1px solid #ccc;">Pontuação</th>
-              <th style="padding: 10px; border: 1px solid #ccc;">Recompensa</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ccc;">100 pts</td>
-              <td style="padding: 10px; border: 1px solid #ccc;">🥉 Insígnia de Iniciante</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ccc;">250 pts</td>
-              <td style="padding: 10px; border: 1px solid #ccc;">🏅 Medalha de Persistência</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ccc;">400 pts</td>
-              <td style="padding: 10px; border: 1px solid #ccc;">🎁 Missão Bônus com Pontos Extras</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ccc;">600 pts</td>
-              <td style="padding: 10px; border: 1px solid #ccc;">🏆 Título "Explorador da Trilha"</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ccc;">1000 pts</td>
-              <td style="padding: 10px; border: 1px solid #ccc;">🎖️ Medalha de Aluno Destaque (entregue pela escola)</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="tabela-responsiva">
+          <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+              <tr style="background-color: #f0f0f0;">
+                <th style="padding: 10px; border: 1px solid #ccc;">Pontuação</th>
+                <th style="padding: 10px; border: 1px solid #ccc;">Recompensa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ccc;">100 pts</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">🥉 Insígnia de Iniciante</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ccc;">250 pts</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">🏅 Medalha de Persistência</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ccc;">400 pts</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">🎁 Missão Bônus com Pontos Extras</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ccc;">600 pts</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">🏆 Título "Explorador da Trilha"</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ccc;">1000 pts</td>
+                <td style="padding: 10px; border: 1px solid #ccc;">🎖️ Medalha de Aluno Destaque (entregue pela escola)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
   </div>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>

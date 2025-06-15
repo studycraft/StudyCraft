@@ -10,6 +10,21 @@
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
+  <div class="mobile-header">
+    <div class="mobile-header-inner">
+      <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+      <button class="hamburger" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobileMenu">
+      <ul>
+        <li><a href="{% url 'painel_progresso' %}"><i class="fas fa-trophy"></i> Meu Progresso</a></li>
+        <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+      </ul>
+    </nav>
+  </div>
+
   <div class="admin-container">
     <!-- Sidebar do aluno -->
     <aside class="sidebar">
@@ -36,67 +51,76 @@
       <h1><i class="fas fa-scroll"></i> Aventuras Pendentes</h1>
 
       <div class="tabela-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Aventura</th>
-              <th>Trilha</th>
-              <th>Disciplina</th>
-              <th>Instruções</th>
-              <th>Prazo</th>
-              <th>Entregar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Valor Numérico</td>
-              <td>Funções Quadráticas</td>
-              <td>Matemática</td>
-              <td>
-                <a href="{% static 'pdfs/valor_numerico.pdf' %}" class="btn btn-small" download>
-                  <i class="fas fa-file-download"></i> PDF
-                </a>
-              </td>
-              <td>15/06/2025</td>
-              <td>
-                <input type="file" id="arquivo1">
-                <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Permutação com Repetição</td>
-              <td>Análise Combinatória</td>
-              <td>Matemática</td>
-              <td>
-                <a href="{% static 'pdfs/permutacao_com_repeticao.pdf' %}" class="btn btn-small" download>
-                  <i class="fas fa-file-download"></i> PDF
-                </a>
-              </td>
-              <td>18/06/2025</td>
-              <td>
-                <input type="file" id="arquivo2">
-                <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
-              </td>
-            </tr>
-            <tr>
-              <td>A Guerra de Trincheiras</td>
-              <td>Primeira Guerra Mundial</td>
-              <td>História</td>
-              <td>
-                <a href="{% static 'pdfs/guerra_de_trincheiras.pdf' %}" class="btn btn-small" download>
-                  <i class="fas fa-file-download"></i> PDF
-                </a>
-              </td>
-              <td>21/06/2025</td>
-              <td>
-                <input type="file" id="arquivo3">
-                <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="tabela-responsiva">
+          <table>
+            <thead>
+              <tr>
+                <th>Aventura</th>
+                <th>Trilha</th>
+                <th>Disciplina</th>
+                <th>Instruções</th>
+                <th>Prazo</th>
+                <th>Entregar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Valor Numérico</td>
+                <td>Funções Quadráticas</td>
+                <td>Matemática</td>
+                <td>
+                  <a href="{% static 'pdfs/valor_numerico.pdf' %}" class="btn btn-small" download>
+                    <i class="fas fa-file-download"></i> PDF
+                  </a>
+                </td>
+                <td>15/06/2025</td>
+                <td>
+                  <input type="file" id="arquivo1">
+                  <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Permutação com Repetição</td>
+                <td>Análise Combinatória</td>
+                <td>Matemática</td>
+                <td>
+                  <a href="{% static 'pdfs/permutacao_com_repeticao.pdf' %}" class="btn btn-small" download>
+                    <i class="fas fa-file-download"></i> PDF
+                  </a>
+                </td>
+                <td>18/06/2025</td>
+                <td>
+                  <input type="file" id="arquivo2">
+                  <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>A Guerra de Trincheiras</td>
+                <td>Primeira Guerra Mundial</td>
+                <td>História</td>
+                <td>
+                  <a href="{% static 'pdfs/guerra_de_trincheiras.pdf' %}" class="btn btn-small" download>
+                    <i class="fas fa-file-download"></i> PDF
+                  </a>
+                </td>
+                <td>21/06/2025</td>
+                <td>
+                  <input type="file" id="arquivo3">
+                  <button class="btn btn-small"><i class="fas fa-upload"></i> Enviar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>

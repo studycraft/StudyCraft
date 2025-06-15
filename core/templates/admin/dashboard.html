@@ -11,21 +11,20 @@
 </head>
 <body>
     <div class="mobile-header">
-    <div class="mobile-header-inner">
-        <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
-        <button class="hamburger" onclick="toggleMobileMenu()">
-        <i class="fas fa-bars"></i>
-        </button>
-    </div>
-    <nav class="mobile-nav" id="mobileMenu">
-        <ul>
-        <li><a href="{% url 'dashboard_admin' %}"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="{% url 'cadastro_professor' %}"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
-        <li><a href="{% url 'cadastro_aluno' %}"><i class="fas fa-user-graduate"></i> Alunos</a></li>
-        <li><a href="{% url 'cadastro_trilha' %}"><i class="fas fa-project-diagram"></i> Trilhas</a></li>
-        <li><button class="btn btn-sair" onclick="sairDoPainel()"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
-        </ul>
-    </nav>
+        <div class="mobile-header-inner">
+            <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+            <button class="hamburger" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav" id="mobileMenu">
+            <ul>
+            <li><a href="{% url 'cadastro_professor' %}"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
+            <li><a href="{% url 'cadastro_aluno' %}"><i class="fas fa-user-graduate"></i> Alunos</a></li>
+            <li><a href="{% url 'cadastro_trilha' %}"><i class="fas fa-project-diagram"></i> Trilhas</a></li>
+            <li><button class="btn btn-sair" onclick="sairDoPainel()"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+            </ul>
+        </nav>
     </div>
     <div class="admin-container">
         <aside class="sidebar">

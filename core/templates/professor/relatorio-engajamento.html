@@ -11,6 +11,21 @@
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
+      <div class="mobile-header">
+        <div class="mobile-header-inner">
+            <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+            <button class="hamburger" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav" id="mobileMenu">
+            <ul>
+                <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="{% url 'listar_aventura' %}"><i class="fas fa-tasks"></i> Aventuras</a></li>
+                <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+            </ul>
+        </nav>
+    </div>
     <div class="admin-container">
         <aside class="sidebar">
             <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
@@ -107,6 +122,12 @@
 
       renderizarTabela('');
     });
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('active');
+    }
+
   </script>
 </body>
 </html>

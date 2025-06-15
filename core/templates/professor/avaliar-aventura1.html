@@ -10,6 +10,22 @@
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
+  <div class="mobile-header">
+      <div class="mobile-header-inner">
+          <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+          <button class="hamburger" onclick="toggleMobileMenu()">
+              <i class="fas fa-bars"></i>
+          </button>
+      </div>
+      <nav class="mobile-nav" id="mobileMenu">
+          <ul>
+              <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+              <li><a href="{% url 'listar_aventura' %}"><i class="fas fa-tasks"></i> Aventuras</a></li>
+              <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+              <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+          </ul>
+      </nav>
+  </div>
   <div class="admin-container">
     <!-- Menu lateral do professor -->
     <aside class="sidebar">
@@ -36,47 +52,49 @@
         <p><strong>Prazo de Entrega:</strong> 15/06/2025</p>
 
         <h2>Entregas dos Alunos</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Aluno</th>
-              <th>Data de Entrega</th>
-              <th>Arquivo</th>
-              <th>Avaliação</th>
-              <th>Pontuação</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Amanda Arrais</td>
-              <td>14/06/2025</td>
-              <td><a href="#"><i class="fas fa-file-pdf"></i> Download</a></td>
-              <td>
-                <select>
-                  <option>Selecionar</option>
-                  <option>Correto</option>
-                  <option>Parcialmente correto</option>
-                  <option>Incorreto</option>
-                </select>
-              </td>
-              <td><input type="number" min="0" max="100" value="100"></td>
-            </tr>
-            <tr>
-              <td>Carlos Wanderson</td>
-              <td>15/06/2025</td>
-              <td><a href="#"><i class="fas fa-file-pdf"></i> Download</a></td>
-              <td>
-                <select>
-                  <option>Selecionar</option>
-                  <option>Correto</option>
-                  <option>Parcialmente correto</option>
-                  <option>Incorreto</option>
-                </select>
-              </td>
-              <td><input type="number" min="0" max="100"></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="tabela-responsiva">
+          <table>
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Data de Entrega</th>
+                <th>Arquivo</th>
+                <th>Avaliação</th>
+                <th>Pontuação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Amanda Arrais</td>
+                <td>14/06/2025</td>
+                <td><a href="#"><i class="fas fa-file-pdf"></i> Download</a></td>
+                <td>
+                  <select>
+                    <option>Selecionar</option>
+                    <option>Correto</option>
+                    <option>Parcialmente correto</option>
+                    <option>Incorreto</option>
+                  </select>
+                </td>
+                <td><input type="number" min="0" max="100" value="100"></td>
+              </tr>
+              <tr>
+                <td>Carlos Wanderson</td>
+                <td>15/06/2025</td>
+                <td><a href="#"><i class="fas fa-file-pdf"></i> Download</a></td>
+                <td>
+                  <select>
+                    <option>Selecionar</option>
+                    <option>Correto</option>
+                    <option>Parcialmente correto</option>
+                    <option>Incorreto</option>
+                  </select>
+                </td>
+                <td><input type="number" min="0" max="100"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div style="margin-top: 20px; text-align: right;">
           <button class="btn"><i class="fas fa-save"></i> Salvar Avaliações</button>
@@ -85,4 +103,12 @@
     </main>
   </div>
 </body>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+    </script>
+
 </html>

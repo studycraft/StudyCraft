@@ -11,6 +11,21 @@
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
+  <div class="mobile-header">
+      <div class="mobile-header-inner">
+          <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+          <button class="hamburger" onclick="toggleMobileMenu()">
+              <i class="fas fa-bars"></i>
+          </button>
+      </div>
+      <nav class="mobile-nav" id="mobileMenu">
+          <ul>
+              <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+              <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+              <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+          </ul>
+      </nav>
+  </div>
   <div class="admin-container">
     <!-- Menu lateral do professor -->
     <aside class="sidebar">
@@ -75,4 +90,10 @@
     </main>
   </div>
 </body>
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+    </script>
 </html>

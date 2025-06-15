@@ -299,7 +299,20 @@ th, td {
 }
 
 @media (max-width: 768px) {
-    
+
+  .content h1 {
+    font-size: 1.3rem;
+  }
+
+  .content h2 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
+   
+   .content h3 {
+    font-size: 1.0rem;
+  }
+
   .admin-container {
     flex-direction: column;
   }
@@ -326,7 +339,7 @@ th, td {
 
   .logo-mobile {
     max-height: 50px;
-    margin: auto;
+    margin: 0;
   }
 
   .hamburger {
@@ -379,6 +392,11 @@ th, td {
 
   .mobile-nav .btn-sair:hover {
     background-color: #c0392b;
+  }
+
+  .tabela-responsiva {
+    overflow-x: auto;
+    width: 100%;
   }
   
 }

@@ -10,6 +10,22 @@
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
+    <div class="mobile-header">
+        <div class="mobile-header-inner">
+            <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+            <button class="hamburger" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav" id="mobileMenu">
+            <ul>
+            <li><a href="{% url 'dashboard_admin' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{% url 'cadastro_aluno' %}"><i class="fas fa-user-graduate"></i> Alunos</a></li>
+            <li><a href="{% url 'cadastro_trilha' %}"><i class="fas fa-project-diagram"></i> Trilhas</a></li>
+            <li><button class="btn btn-sair" onclick="sairDoPainel()"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+            </ul>
+        </nav>
+    </div>
     <div class="admin-container">
         <aside class="sidebar">
             <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
@@ -76,7 +92,6 @@
     </div>
 
     <script src="{% static 'js/admin.js' %}"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('access_token');
@@ -108,15 +123,15 @@
                 })
                 .then(res => {
                     if (res.ok) {
-                        alert("Professor excluído com sucesso !");
+                        exibirAlerta("Professor excluído com sucesso!", 'success');
                         carregarProfessores();
                     } else {
-                        alert("Erro ao excluir o professor.");
+                        exibirAlerta("Erro ao excluir o professor.", 'danger');
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert("Erro ao excluir o professor.");
+                    exibirAlerta("Erro ao excluir o professor.", 'danger');
                 });
             }
 
@@ -136,52 +151,22 @@
                             <td>${prof.matricula}</td>
                             <td>${prof.disciplina}</td>
                             <td>
-                                <button class="btn btn-small btn-editar">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-small btn-excluir">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <button class="btn btn-small btn-editar"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-small btn-excluir"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         `;
-                        // Adiciona comportamento aos botões
                         tr.querySelector('.btn-editar').addEventListener('click', () => {
                             editarProfessor(prof.id, prof.nome, prof.email, prof.matricula, prof.disciplina);
                         });
                         tr.querySelector('.btn-excluir').addEventListener('click', () => {
                             excluirProfessor(prof.id);
                         });
-
                         tabela.appendChild(tr);
                     });
                 })
                 .catch(err => {
                     console.error(err);
                     tabela.innerHTML = '<tr><td colspan="4">Erro ao carregar professores.</td></tr>';
-                });
-            }
-
-
-            function excluirProfessor(id) {
-                if (!confirm('Tem certeza que deseja excluir este professor?')) return;
-
-                fetch(`${window.location.origin}/api/professores/${id}/`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                .then(res => {
-                    if (res.ok) {
-                        alert('Professor excluído com sucesso!');
-                        carregarProfessores();
-                    } else {
-                        alert('Erro ao excluir professor.');
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Erro ao excluir professor.');
                 });
             }
 
@@ -209,25 +194,35 @@
                 })
                 .then(res => {
                     if (res.ok) {
-                        alert(professorId ? 'Professor atualizado com sucesso!' : 'Professor cadastrado com sucesso!');
+                        exibirAlerta(professorId ? 'Professor atualizado com sucesso!' : 'Professor cadastrado com sucesso!', 'success');
                         form.reset();
                         form.removeAttribute('data-id');
                         carregarProfessores();
                     } else {
                         res.json().then(data => {
                             console.error(data);
-                            alert('Erro ao salvar os dados do professor.');
+                            if (data.matricula) {
+                                exibirAlerta('Erro: ' + data.matricula[0], 'danger');
+                            } else {
+                                exibirAlerta('Erro ao salvar os dados do professor.', 'danger');
+                            }
                         });
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Erro ao salvar os dados do professor.');
+                    exibirAlerta('Erro ao salvar os dados do professor.', 'danger');
                 });
             });
 
             carregarProfessores();
         });
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
     </script>
+
 </body>
 </html>
