@@ -20,6 +20,7 @@
     <nav class="mobile-nav" id="mobileMenu">
       <ul>
         <li><a href="{% url 'painel_aventuras' %}"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
+        <li><a href="{% url 'responder_quizz' %}"><i class="fas fa-gamepad"></i>Meus Quizzes</a></li>
         <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
       </ul>
     </nav>
@@ -31,8 +32,9 @@
       <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
       <nav>
         <ul>
-          <li><a href="{% url 'painel_aventuras' %}"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
-          <li><a href="{% url 'painel_progresso' %}" class="active"><i class="fas fa-trophy"></i> Meu Progresso</a></li>
+         <li><a href="{% url 'painel_aventuras' %}"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
+         <li><a href="{% url 'painel_progresso' %}" class="active"><i class="fas fa-trophy"></i> Meu Progresso</a></li>
+         <li><a href="{% url 'responder_quizz' %}"><i class="fas fa-gamepad"></i> Meus Quizzes</a></li>
         </ul>
       </nav>
       <button class="btn" onclick="window.location.href='/'">

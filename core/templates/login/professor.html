@@ -53,7 +53,6 @@
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
 
-                alert('Login realizado com sucesso!');
                 window.location.href = '/painel/professor/';
             } catch (err) {
                 alert('Erro ao fazer login: ' + err.message);

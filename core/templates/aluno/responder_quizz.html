@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StudyCraft - Meus Quizzes</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+  <!-- Cabeçalho Mobile -->
+  <div class="mobile-header">
+    <div class="mobile-header-inner">
+      <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+      <button class="hamburger" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobileMenu">
+      <ul>
+        <li><a href="{% url 'painel_aventuras' %}"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
+        <li><a href="{% url 'painel_progresso' %}"><i class="fas fa-trophy"></i> Meu Progresso</a></li>
+        <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <aside class="sidebar">
+      <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+      <nav>
+        <ul>
+          <li><a href="{% url 'painel_aventuras' %}"><i class="fas fa-scroll"></i> Minhas Aventuras</a></li>
+          <li><a href="{% url 'painel_progresso' %}"><i class="fas fa-trophy"></i> Meu Progresso</a></li>
+          <li><a href="{% url 'responder_quizz' %}" class="active"><i class="fas fa-gamepad"></i> Meus Quizzes</a></li>
+        </ul>
+      </nav>
+      <button class="btn" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </aside>
+
+  <main class="content">
+      <!-- Saudação -->
+      <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <i class="fas fa-user" style="margin-right: 10px; color: #333;"></i>
+        <h2 style="margin: 0;">Bem-vindo(a), <strong>Carlos Wanderson</strong></h2>
+      </div>
+
+      <h1><i class="fas fa-gamepad"></i> Quizzes Disponíveis</h1>
+
+      <div class="tabela-container">
+        <div class="tabela-responsiva">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome do Quizz</th>
+                <th>Disciplina</th>
+                <th>Tentativas</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="quiz-listagem"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="quiz-container" style="display: none;" id="quizContainer">
+        <div class="quiz-header">
+          <h2><i class="fas fa-pen"></i> Responder Quizz: <span id="quizNomeAtual"></span></h2>
+          <button class="btn btn-voltar" onclick="voltarParaListagem()">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </button>
+        </div>
+        <form id="quizForm"></form>
+        <button class="btn btn-enviar" onclick="enviarRespostas()">
+          <i class="fas fa-paper-plane"></i> Enviar Respostas
+        </button>
+      </div>
+
+      <div class="result-container" style="display: none;" id="resultContainer">
+        <div class="result-header">
+          <h2><i class="fas fa-chart-bar"></i> Resultado do Quizz: <span id="quizNomeResultado"></span></h2>
+          <button class="btn btn-voltar" onclick="voltarParaListagem()">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </button>
+        </div>
+        <div class="result-content" id="resultadoFinal"></div>
+        <button class="btn btn-tentar-novamente" id="btnTentarNovamente" style="display: none;" onclick="tentarNovamente()">
+          <i class="fas fa-redo"></i> Tentar Novamente
+        </button>
+      </div>
+    </main>
+  </div>
+
+<script>
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('active');
+    }
+
+    let quizAtual = null;
+    const tentativasPorQuiz = JSON.parse(localStorage.getItem('tentativasPorQuiz')) || {};
+    const resultadosQuiz = JSON.parse(localStorage.getItem('resultadosQuiz')) || {};
+
+    // Função para voltar à listagem de quizzes
+    function voltarParaListagem() {
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('resultContainer').style.display = 'none';
+        document.querySelector('.tabela-container').style.display = 'block';
+        document.querySelector('h1').style.display = 'block';
+        carregarQuizzesDisponiveis();
+    }
+
+    // Função para tentar novamente o quiz
+    function tentarNovamente() {
+        if (!quizAtual) return;
+        document.getElementById('resultContainer').style.display = 'none';
+        exibirQuiz();
+    }
+
+async function carregarQuizzesDisponiveis() {
+    try {
+        const response = await fetch('/api/quizzes/');
+        const quizzes = await response.json();
+
+        const tabela = document.getElementById('quiz-listagem');
+        tabela.innerHTML = '';
+
+        if (quizzes.length === 0) {
+            tabela.innerHTML = '<tr><td colspan="5">Nenhum quiz disponível no momento.</td></tr>';
+            return;
+        }
+
+        quizzes.forEach(quiz => {
+            const tentativas = tentativasPorQuiz[quiz.id] || 0;
+            const resultado = resultadosQuiz[quiz.id];
+            const linha = document.createElement('tr');
+
+            let status = 'Não iniciado';
+            if (resultado) {
+                status = `Completo (${resultado.pontuacao}/${resultado.pontuacao_maxima} pts)`;
+            } else if (tentativas > 0) {
+                status = 'Em andamento';
+            }
+
+            const atingiuPontuacaoMaxima = resultado && resultado.pontuacao >= resultado.pontuacao_maxima;
+            const semTentativas = tentativas >= 3;
+
+            let botaoTexto = 'Iniciar';
+            let botaoIcone = 'fa-play';
+
+            if (resultado && (atingiuPontuacaoMaxima || semTentativas)) {
+                botaoTexto = 'Ver Resultado';
+                botaoIcone = 'fa-eye';
+            } else if (tentativas > 0) {
+                botaoTexto = 'Tentar novamente';
+                botaoIcone = 'fa-redo';
+            }
+
+            // ✅ Aqui está a parte importante que decide a ação do botão:
+            const acaoBotao = (resultado && (atingiuPontuacaoMaxima || semTentativas))
+                ? `mostrarResultado(${quiz.id})`
+                : `iniciarQuiz(${quiz.id})`;
+
+            linha.innerHTML = `
+                <td>${quiz.nome}</td>
+                <td>${quiz.disciplina}</td>
+                <td>${tentativas} / 3</td>
+                <td>${status}</td>
+                <td>
+                    <button class="btn btn-small" onclick="${acaoBotao}" ${semTentativas && !atingiuPontuacaoMaxima ? 'disabled' : ''}>
+                        <i class="fas ${botaoIcone}"></i> ${botaoTexto}
+                    </button>
+                </td>
+            `;
+            tabela.appendChild(linha);
+        });
+
+    } catch (error) {
+        console.error('Erro ao carregar quizzes:', error);
+        document.getElementById('quiz-listagem').innerHTML = `
+            <tr>
+                <td colspan="5">
+                    Erro ao carregar quizzes: ${error.message}
+                    <button class="btn btn-small" onclick="window.location.reload()">Recarregar</button>
+                </td>
+            </tr>
+        `;
+    }
+}
+
+    async function iniciarQuiz(quizId) {
+        try {
+            // Chamada AJAX para obter os detalhes do quiz
+            const response = await fetch(`/api/quizzes/${quizId}/`); // Substitua pela sua URL real
+            quizAtual = await response.json();
+
+            // Verifica se já existe resultado para este quiz e se ainda pode tentar novamente
+            const resultadoExistente = resultadosQuiz[quizId];
+            const tentativas = tentativasPorQuiz[quizId] || 0;
+            
+            if (resultadoExistente && tentativas >= 3) {
+                mostrarResultado(quizId);
+                return;
+            }
+
+            if (!quizAtual.questoes || quizAtual.questoes.length === 0) {
+                throw new Error('Este quiz não possui questões');
+            }
+            
+            exibirQuiz();
+
+        } catch (error) {
+            console.error('Erro:', error);
+            alert(`Erro: ${error.message}`);
+            carregarQuizzesDisponiveis();
+        }
+    }
+
+    function exibirQuiz() {
+        const quizContainer = document.getElementById('quizContainer');
+        const quizForm = document.getElementById('quizForm');
+        
+        document.querySelector('.tabela-container').style.display = 'none';
+        document.querySelector('h1').style.display = 'none';
+        quizContainer.style.display = 'block';
+        document.getElementById('quizNomeAtual').textContent = quizAtual.nome;
+        
+        quizForm.innerHTML = '';
+
+        quizAtual.questoes.forEach((questao, index) => {
+            const questaoDiv = document.createElement('div');
+            questaoDiv.className = 'question-block';
+            questaoDiv.innerHTML = `
+                <h3>${index + 1}. ${questao.texto} <span class="pontos">(${questao.pontos} pontos)</span></h3>
+                <div class="answers">
+                    ${questao.respostas.map((resposta, i) => `
+                        <label class="answer-option">
+                            <input type="radio" name="q${questao.id}" value="${resposta.id}" required>
+                            <span>${resposta.texto}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            quizForm.appendChild(questaoDiv);
+        });
+    }
+
+async function enviarRespostas() {
+    if (!quizAtual) return;
+
+    const form = document.getElementById('quizForm');
+    const formData = new FormData(form);
+    const respostas = [];
+
+    let todasRespondidas = true;
+    quizAtual.questoes.forEach(questao => {
+        if (!formData.get(`q${questao.id}`)) {
+            todasRespondidas = false;
+        }
+    });
+
+    if (!todasRespondidas) {
+        alert('Por favor, responda todas as perguntas antes de enviar.');
+        return;
+    }
+
+    quizAtual.questoes.forEach(questao => {
+        respostas.push({
+            questao_id: questao.id,
+            resposta_id: formData.get(`q${questao.id}`)
+        });
+    });
+
+    try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            alert("Usuário não autenticado.");
+            return;
+        }
+
+const response = await fetch('/api/responder-quiz/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        quiz_id: quizAtual.id,
+        respostas: respostas
+    })
+});
+
+        if (!response.ok) {
+            const erro = await response.json();
+            throw new Error(erro.message || 'Erro ao enviar respostas.');
+        }
+
+        const resultadoBackend = await response.json();
+
+        const resultado = {
+            pontuacao: resultadoBackend.pontuacao,
+            pontuacao_maxima: resultadoBackend.pontuacao_maxima,
+            respostas: respostas
+        };
+
+        // Sempre sobrescreve com a nova tentativa
+// Sempre sobrescreve com a nova tentativa
+resultadosQuiz[quizAtual.id] = resultado;
+
+// Incrementa a tentativa
+tentativasPorQuiz[quizAtual.id] = (tentativasPorQuiz[quizAtual.id] || 0) + 1;
+
+localStorage.setItem('tentativasPorQuiz', JSON.stringify(tentativasPorQuiz));
+localStorage.setItem('resultadosQuiz', JSON.stringify(resultadosQuiz));
+
+mostrarResultado(quizAtual.id);
+
+
+    } catch (error) {
+        console.error('Erro ao enviar respostas:', error);
+        alert(error.message);
+    }
+}
+ function mostrarResultado(quizId) {
+    const resultado = resultadosQuiz[quizId];
+    const quizContainer = document.getElementById('quizContainer');
+    const resultContainer = document.getElementById('resultContainer');
+    
+    quizContainer.style.display = 'none';
+    document.querySelector('.tabela-container').style.display = 'none';
+    document.querySelector('h1').style.display = 'none';
+    resultContainer.style.display = 'block';
+    
+    document.getElementById('quizNomeResultado').textContent = quizAtual ? quizAtual.nome : '';
+
+    // Verifica se o usuário pode tentar novamente
+    const tentativas = tentativasPorQuiz[quizId] || 0;
+    const podeTentarNovamente = tentativas < 3 && resultado.pontuacao < resultado.pontuacao_maxima / 2;
+    document.getElementById('btnTentarNovamente').style.display = podeTentarNovamente ? 'block' : 'none';
+
+    // Exibe resultado geral
+    document.getElementById('resultadoFinal').innerHTML = `
+        <h3>Seu desempenho</h3>
+        <p>Você acertou <strong>${resultado.pontuacao}</strong> de <strong>${resultado.pontuacao_maxima}</strong> pontos!</p>
+        <p>Porcentagem de acertos: <strong>${Math.round((resultado.pontuacao / resultado.pontuacao_maxima) * 100)}%</strong></p>
+        <div class="progress-bar">
+            <div class="progress" style="width: ${(resultado.pontuacao / resultado.pontuacao_maxima) * 100}%"></div>
+        </div>
+        <p class="${resultado.pontuacao >= resultado.pontuacao_maxima / 2 ? 'correct-answer' : 'wrong-answer'}">
+            ${resultado.pontuacao >= resultado.pontuacao_maxima / 2 ? 
+             'Parabéns! Você atingiu a pontuação mínima!' : 
+             'Você não atingiu a pontuação mínima.'}
+        </p>
+        <p>Tentativas realizadas: ${tentativas} / 3</p>
+    `;
+
+}
+
+// Carrega os quizzes quando a página é aberta
+document.addEventListener('DOMContentLoaded', carregarQuizzesDisponiveis);
+</script>
+</body>
+</html>

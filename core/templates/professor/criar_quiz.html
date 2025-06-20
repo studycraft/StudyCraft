@@ -1,0 +1,513 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StudyCraft - Área de Quiz</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+
+  <!-- Header Mobile -->
+  <div class="mobile-header">
+    <div class="mobile-header-inner">
+      <img src="{% static 'images/logo_sc3.png' %}" alt="Logo StudyCraft" class="logo-mobile">
+      <button class="hamburger" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+    </div>
+    <nav class="mobile-nav" id="mobileMenu">
+      <ul>
+        <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="{% url 'listar_aventura' %}"><i class="fas fa-tasks"></i> Aventuras</a></li>
+        <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+        <li><button class="btn btn-sair" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <aside class="sidebar">
+      <img src="{% static 'images/logo_sc2.png' %}" alt="Logo StudyCraft" class="logo-small">
+      <nav>
+        <ul>
+          <li><a href="{% url 'dashboard_professor' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li><a href="{% url 'listar_aventura' %}"><i class="fas fa-tasks"></i> Aventuras</a></li>
+          <li><a href="{% url 'relatorio_engajamento' %}"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+          <li><a href="{% url 'criar_quiz' %}" class="active"><i class="fas fa-puzzle-piece"></i> Área de Quiz</a></li>
+        </ul>
+      </nav>
+      <button class="btn" onclick="window.location.href='/'"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </aside>
+
+    <main class="content">
+      <h1><i class="fas fa-pen"></i> Criar Novo Quiz</h1>
+
+      <!-- Formulário de criação -->
+      <form id="quiz-info-form">
+        <div class="form-group">
+          <label for="quizName"><i class="fas fa-heading"></i> Nome do Quiz:</label>
+          <input type="text" id="quizName" required placeholder="Digite o nome do quiz">
+        </div>
+        <div class="form-group">
+          <label for="quizDiscipline"><i class="fas fa-book"></i> Disciplina:</label>
+          <input type="text" id="quizDiscipline" required placeholder="Digite a disciplina">
+        </div>
+        <div class="form-group">
+          <label for="serieEnsinoMedio"><i class="fas fa-graduation-cap"></i> Série do Ensino Médio:</label>
+          <select id="serieEnsinoMedio" required>
+            <option value="" disabled selected>Selecione a série</option>
+            <option value="1º Ano">1º Ano</option>
+            <option value="2º Ano">2º Ano</option>
+            <option value="3º Ano">3º Ano</option>
+          </select>
+        </div>
+      </form>
+
+      <!-- Formulário de pergunta -->
+      <form id="form-pergunta">
+        <div class="form-group">
+          <label for="question"><i class="fas fa-question-circle"></i> Pergunta:</label>
+          <input type="text" id="question" required placeholder="Digite sua pergunta">
+        </div>
+        <div class="form-group">
+          <label for="points"><i class="fas fa-star"></i> Pontos:</label>
+          <input type="number" id="points" required placeholder="Valor de pontos">
+        </div>
+        <div class="form-group">
+          <label for="answer1"><i class="fas fa-circle"></i> Resposta 1:</label>
+          <input type="text" id="answer1" required placeholder="Digite a resposta 1">
+        </div>
+        <div class="form-group">
+          <label for="answer2"><i class="fas fa-circle"></i> Resposta 2:</label>
+          <input type="text" id="answer2" required placeholder="Digite a resposta 2">
+        </div>
+        <div class="form-group">
+          <label for="answer3"><i class="fas fa-circle"></i> Resposta 3:</label>
+          <input type="text" id="answer3" required placeholder="Digite a resposta 3">
+        </div>
+        <div class="form-group">
+          <label for="answer4"><i class="fas fa-circle"></i> Resposta 4:</label>
+          <input type="text" id="answer4" required placeholder="Digite a resposta 4">
+        </div>
+        <div class="form-group">
+          <label for="correctAnswer"><i class="fas fa-check-circle"></i> Resposta Correta:</label>
+          <select id="correctAnswer" required>
+            <option value="" disabled selected>Selecione a resposta correta</option>
+            <option value="0">Resposta 1</option>
+            <option value="1">Resposta 2</option>
+            <option value="2">Resposta 3</option>
+            <option value="3">Resposta 4</option>
+          </select>
+        </div>
+        <button type="button" class="btn" onclick="adicionarQuestaoAoQuiz()">
+          <i class="fas fa-plus-circle"></i> Adicionar Pergunta
+        </button>
+      </form>
+
+      <!-- Seção de perguntas (invisível até adicionar perguntas) -->
+      <div id="secaoPerguntas" style="display: none;">
+        <hr style="margin: 40px 0;">
+        <h2><i class="fas fa-list-ul"></i> Perguntas no Quiz</h2>
+        <div class="tabela-container" style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Pergunta</th>
+                <th>Pontos</th>
+                <th>Respostas</th>
+                <th>Correta</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="quizList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <button class="btn" onclick="salvarQuiz()" style="margin-top: 20px;">
+        <i class="fas fa-save"></i> Salvar Quiz
+      </button>
+
+      <hr style="margin: 50px 0 40px;">
+      <h2><i class="fas fa-folder-open"></i> Quizzes Salvos</h2>
+      <div class="tabela-container" style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Disciplina</th>
+              <th>Série</th>
+              <th>Qtd. Perguntas</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="quizzesSalvos"></tbody>
+        </table>
+      </div>
+      <hr style="margin: 50px 0 40px;">
+      <h2><i class="fas fa-user-graduate"></i> Resultados dos Alunos</h2>
+      <div style="margin-bottom: 30px;">
+ <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: flex-end;">
+  <div class="form-group" style="margin-bottom: 0;">
+    <select id="filtroQuiz" onchange="filtrarResultadosPorQuiz()" style="padding: 6px;">
+      <option value="" disabled selected>Selecionar o Quiz</option>
+      <!-- As opções de quizzes serão adicionadas via JavaScript -->
+    </select>
+  </div>
+
+  <div class="form-group" style="margin-bottom: 0;">
+     <select id="filtroSerie" onchange="filtrarResultadosPorQuiz()" style="padding: 6px;">
+      <option value="" disabled selected>Selecionar a Série</option>
+      <option value="1º Ano">1º Ano</option>
+      <option value="2º Ano">2º Ano</option>
+      <option value="3º Ano">3º Ano</option>
+    </select>
+  </div>
+</div>
+
+</div>
+      <div class="tabela-container" style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Aluno</th>
+              <th>Quiz</th>
+              <th>Pontuação</th>
+            </tr>
+          </thead>
+          <tbody id="quizScores"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+     function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('active');
+    }
+
+    // State
+    let quizQuestoes = [];
+    let indiceEdicao = null;
+
+    // Adiciona/edita pergunta
+    function adicionarQuestaoAoQuiz() {
+      const pergunta = document.getElementById('question').value.trim();
+      const pontos = parseInt(document.getElementById('points').value);
+      const respostas = [
+        document.getElementById('answer1').value.trim(),
+        document.getElementById('answer2').value.trim(),
+        document.getElementById('answer3').value.trim(),
+        document.getElementById('answer4').value.trim()
+      ];
+      const respostaCorreta = parseInt(document.getElementById('correctAnswer').value);
+
+      if (!pergunta || isNaN(pontos) || respostas.some(r => !r) || isNaN(respostaCorreta)) {
+        alert('Preencha todos os campos corretamente.');
+        return;
+      }
+      const nova = { pergunta, respostas, respostaCorreta, pontos };
+
+      if (indiceEdicao !== null) {
+        quizQuestoes[indiceEdicao] = nova;
+        indiceEdicao = null;
+        alert('Pergunta atualizada!');
+      } else {
+        quizQuestoes.push(nova);
+        alert('Pergunta adicionada!');
+      }
+      document.getElementById('form-pergunta').reset();
+      atualizarListaQuestoes();
+    }
+
+    // Atualiza tabela de perguntas
+    function atualizarListaQuestoes() {
+      const quizList = document.getElementById('quizList');
+      quizList.innerHTML = '';
+      quizQuestoes.forEach((q, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${q.pergunta}</td>
+          <td>${q.pontos}</td>
+          <td><ul>${q.respostas.map((r, idx) => `<li>${idx+1}. ${r}</li>`).join('')}</ul></td>
+          <td>${q.respostaCorreta + 1}</td>
+          <td>
+            <button onclick="editarPergunta(${i})" class="btn"><i class="fas fa-edit"></i></button>
+            <button onclick="excluirPergunta(${i})" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+          </td>`;
+        quizList.appendChild(row);
+      });
+      document.getElementById('secaoPerguntas').style.display = quizQuestoes.length ? 'block' : 'none';
+    }
+
+    function editarPergunta(i) {
+      const q = quizQuestoes[i];
+      document.getElementById('question').value = q.pergunta;
+      document.getElementById('points').value = q.pontos;
+      q.respostas.forEach((r, idx) => document.getElementById(`answer${idx+1}`).value = r);
+      document.getElementById('correctAnswer').value = q.respostaCorreta;
+      indiceEdicao = i;
+    }
+
+    function excluirPergunta(i) {
+      if (confirm('Excluir esta pergunta?')) {
+        quizQuestoes.splice(i, 1);
+        atualizarListaQuestoes();
+      }
+    }
+
+    // Salvar quiz
+  let quizEmEdicaoId = null;
+
+    async function salvarQuiz() {
+      const nome = document.getElementById('quizName').value.trim();
+      const disciplina = document.getElementById('quizDiscipline').value.trim();
+      const serie = document.getElementById('serieEnsinoMedio').value;
+      if (!nome || !disciplina || !serie || !quizQuestoes.length) {
+        return alert('Preencha nome, disciplina, série e adicione ao menos uma pergunta.');
+      }
+
+      const dados = {
+        nome, disciplina, serie,
+        questoes: quizQuestoes.map((q, i) => ({
+          ordem: i+1, texto: q.pergunta, pontos: q.pontos,
+          respostas: q.respostas.map((txt, idx) => ({
+            texto: txt, correta: idx === q.respostaCorreta, ordem: idx+1
+          }))
+        }))
+      };
+
+      try {
+        const url = quizEmEdicaoId 
+          ? `/api/quizzes/${quizEmEdicaoId}/` 
+          : '/api/quiz/salvar-publico/';
+        const metodo = quizEmEdicaoId ? 'PUT' : 'POST';
+
+        const resp = await fetch(url, {
+          method: metodo,
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify(dados)
+        });
+
+        if (!resp.ok) throw new Error((await resp.json()).message || resp.status);
+        alert(quizEmEdicaoId ? 'Quiz atualizado com sucesso!' : 'Quiz salvo com sucesso!');
+
+        // Remove resultado salvo localmente, permitindo que o aluno refaça o quiz
+        if (quizEmEdicaoId) {
+          const resultados = JSON.parse(localStorage.getItem('resultadosQuiz') || '{}');
+          const tentativas = JSON.parse(localStorage.getItem('tentativasPorQuiz') || '{}');
+          delete resultados[quizEmEdicaoId];
+          delete tentativas[quizEmEdicaoId];
+          localStorage.setItem('resultadosQuiz', JSON.stringify(resultados));
+          localStorage.setItem('tentativasPorQuiz', JSON.stringify(tentativas));
+        }
+
+        document.getElementById('quiz-info-form').reset();
+        quizQuestoes = [];
+        quizEmEdicaoId = null;
+        atualizarListaQuestoes();
+        carregarQuizzes();
+      } catch (e) {
+        console.error(e);
+        alert('Erro ao salvar quiz: ' + e.message);
+      }
+    }
+
+    window.onload = () => {
+      carregarQuizzes();
+      carregarFiltroQuizzes();
+    };
+
+    // Listar quizzes salvos
+    async function carregarQuizzes() {
+      const tbody = document.getElementById('quizzesSalvos');
+      tbody.innerHTML = '';
+      try {
+        const resp = await fetch('/api/quizzes/', { credentials: 'include' });
+        if (!resp.ok) throw new Error(resp.status);
+        const data = await resp.json();
+        const lista = Array.isArray(data) ? data : data.quizzes || data.results || [];
+        if (!lista.length) {
+          tbody.innerHTML = '<tr><td colspan="5">Nenhum quiz encontrado</td></tr>';
+          return;
+        }
+        lista.forEach(q => {
+          const qtd = q.questoes_count || q.questoes?.length || 0;
+          tbody.innerHTML += `
+            <tr>
+              <td>${q.nome || ''}</td>
+              <td>${q.disciplina || ''}</td>
+              <td>${q.serie || ''}</td>
+              <td>${qtd}</td>
+              <td>
+                <button onclick="editarQuiz(${q.id})" class="btn"><i class="fas fa-edit"></i></button>
+                <button onclick="excluirQuiz(${q.id})" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>`;
+        });
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5">Erro ao carregar: ${e.message}</td></tr>`;
+      }
+    }
+
+    // Editar e excluir via API
+ async function editarQuiz(id) {
+  try {
+    const resp = await fetch(`/api/quizzes/${id}/`);
+    if (!resp.ok) throw new Error(resp.status);
+    const q = await resp.json();
+    document.getElementById('quizName').value = q.nome;
+    document.getElementById('quizDiscipline').value = q.disciplina;
+    document.getElementById('serieEnsinoMedio').value = q.serie;
+    quizQuestoes = q.questoes.map(qd => ({
+      pergunta: qd.texto,
+      pontos: qd.pontos,
+      respostas: qd.respostas.map(r => r.texto),
+      respostaCorreta: qd.respostas.findIndex(r => r.correta)
+    }));
+    quizEmEdicaoId = id;  // <-- ARMAZENA O ID
+    atualizarListaQuestoes();
+    alert('Quiz carregado para edição');
+  } catch (e) {
+    alert('Erro ao carregar quiz');
+  }
+}
+    async function excluirQuiz(id) {
+      if (!confirm('Confirmar exclusão?')) return;
+      try {
+        const resp = await fetch(`/api/quizzes/${id}/`, {
+          method: 'DELETE',
+          credentials: 'same-origin',
+          headers: { 'X-CSRFToken': getCookie('csrftoken') }
+        });
+        if (!resp.ok) throw new Error(resp.status);
+        alert('Quiz excluído');
+        carregarQuizzes();
+      } catch {
+        alert('Erro ao excluir quiz');
+      }
+    }
+
+ async function carregarFiltroQuizzes() {
+    try {
+      const resp = await fetch('/api/quizzes/', { credentials: 'include' });
+      const quizzes = await resp.json();
+      const select = document.getElementById('filtroQuiz');
+
+      quizzes.forEach(q => {
+        const opt = document.createElement('option');
+        opt.value = q.id;
+        opt.textContent = q.nome;
+        select.appendChild(opt);
+      });
+    } catch (e) {
+      console.error('Erro ao carregar quizzes para filtro:', e);
+    }
+  }
+
+  // Modifique a função de carregarResultados para considerar o filtro
+  async function carregarFiltroQuizzes() {
+    try {
+      const resp = await fetch('/api/quizzes/', { credentials: 'include' });
+      const quizzes = await resp.json();
+      const select = document.getElementById('filtroQuiz');
+
+      quizzes.forEach(q => {
+        const opt = document.createElement('option');
+        opt.value = q.id;
+        opt.textContent = q.nome;
+        select.appendChild(opt);
+      });
+    } catch (e) {
+      console.error('Erro ao carregar quizzes para filtro:', e);
+    }
+  }
+
+async function carregarResultados() {
+  const corpo = document.getElementById('quizScores');
+  corpo.innerHTML = '';
+
+  try {
+    const quizId = document.getElementById('filtroQuiz').value;
+    const serie = document.getElementById('filtroSerie').value;
+
+    // Exige que ambos os filtros sejam selecionados
+    if (!quizId || !serie) {
+      corpo.innerHTML = '<tr><td colspan="3">Selecione o Quiz e a Série para ver os resultados</td></tr>';
+      return;
+    }
+
+    let url = `/api/quiz/resultados/?quiz_id=${quizId}&serie=${encodeURIComponent(serie)}`;
+
+    const resp = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const resultados = await resp.json();
+    if (!resultados.length) {
+      corpo.innerHTML = '<tr><td colspan="3">Nenhum resultado encontrado</td></tr>';
+      return;
+    }
+
+    const melhoresResultados = {};
+    resultados.forEach(res => {
+      const chave = `${res.aluno?.id}-${res.quiz?.id}`;
+      if (!melhoresResultados[chave] || res.pontuacao > melhoresResultados[chave].pontuacao) {
+        melhoresResultados[chave] = res;
+      }
+    });
+
+    Object.values(melhoresResultados).forEach(res => {
+      const aluno = res.aluno?.nome || '---';
+      const pontos = res.pontuacao ?? '-';
+      corpo.innerHTML += `
+        <tr>
+          <td>${aluno}</td>
+          <td>${res.quiz?.nome || '---'}</td>
+          <td>${pontos}</td>
+        </tr>`;
+    });
+
+  } catch (e) {
+    console.error(e);
+    corpo.innerHTML = '<tr><td colspan="3">Erro ao carregar resultados</td></tr>';
+  }
+}
+
+
+
+  function filtrarResultadosPorQuiz() {
+    carregarResultados();
+  }
+
+ window.onload = () => {
+  carregarQuizzes();
+  carregarFiltroQuizzes();
+  carregarResultados();
+};
+
+</script>
+
+</body>
+</html>

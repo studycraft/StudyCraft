@@ -15,6 +15,7 @@
     align-items: center;
     min-height: 100vh;
     background-color: #f0f2f5;
+    animation: fadeIn 0.8s ease-in;
 }
 
 /* Caixa do formulário */
@@ -26,19 +27,21 @@
     width: 100%;
     max-width: 400px;
     text-align: center;
+    animation: slideIn 0.8s ease-out;
 }
 
-/* Título */
 .login-box h2 {
     margin-bottom: 20px;
     color: #2c3e50;
     font-size: 24px;
+    animation: fadeInTop 1s ease-out;
 }
 
 /* Grupo de entrada */
 .input-group {
     margin-bottom: 15px;
     text-align: left;
+    animation: fadeInBottom 1s ease-out;
 }
 
 .input-group label {
@@ -55,6 +58,12 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #074EA2;
+    box-shadow: 0 0 5px rgba(7, 78, 162, 0.5);
 }
 
 /* Botões personalizados para cada tipo de login */
@@ -66,8 +75,9 @@
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.3s ease;
     color: white;
+    animation: fadeInBottom 1.2s ease-out;
 }
 
 .btn.professor {
@@ -84,7 +94,7 @@
 
 .btn:hover {
     opacity: 0.9;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.02);
 }
 
 /* Link de retorno */
@@ -94,10 +104,12 @@
     color: #7f8c8d;
     text-decoration: none;
     font-size: 14px;
+    transition: color 0.3s ease;
 }
 
 .back-link:hover {
     text-decoration: underline;
+    color: #34495e;
 }
 
 /* Logo pequena no topo */
@@ -106,4 +118,30 @@
     height: auto;
     margin: 0 auto 20px;
     display: block;
+    transition: transform 0.3s ease;
+}
+
+.logo-small:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInTop {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInBottom {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }

@@ -17,7 +17,9 @@ async function login(username, password, redirectUrl) {
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
 
-        alert('Login realizado com sucesso!');
+        // Removido o alerta de sucesso
+        // alert('Login realizado com sucesso!');
+
         window.location.href = redirectUrl;
 
     } catch (error) {

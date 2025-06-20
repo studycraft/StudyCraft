@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Aluno, Professor, Trilha
+from .models import Aluno, Professor, Trilha, Quiz, Questao, Resposta, ResultadoQuiz
 
 Usuario = get_user_model()
 
@@ -13,11 +13,10 @@ class AlunoSerializer(serializers.ModelSerializer):
         ra = validated_data['ra']
         nome = validated_data['nome']
 
-        # Cria um usuário se ainda não existir
         if not Usuario.objects.filter(username=ra).exists():
             Usuario.objects.create_user(
                 username=ra,
-                password=ra,  # senha = RA
+                password=ra,
                 first_name=nome
             )
 
@@ -25,7 +24,7 @@ class AlunoSerializer(serializers.ModelSerializer):
 
 class ProfessorSerializer(serializers.ModelSerializer):
     nome = serializers.CharField()
-    email = serializers.EmailField(source='user.email')  # <-- aqui está a correção
+    email = serializers.EmailField(source='user.email')
     senha = serializers.CharField(write_only=True)
 
     class Meta:
@@ -77,9 +76,6 @@ class ProfessorSerializer(serializers.ModelSerializer):
 
         return instance
 
-
-
-
 class TrilhaSerializer(serializers.ModelSerializer):
     professor = ProfessorSerializer(read_only=True)
     professor_id = serializers.PrimaryKeyRelatedField(
@@ -95,3 +91,32 @@ class TrilhaSerializer(serializers.ModelSerializer):
     def get_disciplina(self, obj):
         return obj.professor.disciplina if obj.professor else ''
 
+# serializers.py
+from rest_framework import serializers
+from .models import Quiz, Questao, Resposta
+
+class RespostaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resposta
+        fields = ['id', 'texto', 'correta', 'ordem']
+
+class QuestaoSerializer(serializers.ModelSerializer):
+    respostas = RespostaSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Questao
+        fields = ['id', 'texto', 'pontos', 'ordem', 'respostas']
+
+class QuizSerializer(serializers.ModelSerializer):
+    questoes = QuestaoSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Quiz
+        fields = ['id', 'nome', 'disciplina', 'serie', 'questoes']
+class ResultadoQuizSerializer(serializers.ModelSerializer):
+    aluno_nome = serializers.CharField(source='aluno.nome', read_only=True)
+    quiz_nome = serializers.CharField(source='quiz.nome', read_only=True)
+    
+    class Meta:
+        model = ResultadoQuiz
+        fields = ['id', 'aluno', 'aluno_nome', 'quiz', 'quiz_nome', 'pontuacao', 'data_realizacao']
