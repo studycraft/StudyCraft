@@ -10,6 +10,11 @@ Plataforma gamificada de aprendizagem desenvolvida por estudantes da 16ª GRE - 
 
 Combater o desinteresse escolar com uma ferramenta inovadora, acessível e divertida, integrando recursos de gamificação ao processo educacional.
 
+## 📄 Documentos do Projeto
+
+- 📘 [Documentação Técnica - Projeto StudyCraft (PDF)](./docs/Documentacao_Tecnica_StudyCraft.pdf)  
+- 🎤 [Apresentação Pitch - CETI Nossa Senhora do Patrocínio (PDF)](./docs/Pitch_CETI_Nossa_Senhora_do_Patrocinio.pdf)
+
 ---
 
 ## 🚀 Tecnologias Utilizadas
@@ -98,7 +103,100 @@ Authorization: Bearer <access_token>
 
 ---
 
-##▶️ Executando localmente
+## ▶️ Executando localmente
+
+> ⚠️ **Pré-requisitos:**
+- Python 3.11 instalado
+- Git instalado
+- Navegador moderno (Chrome, Firefox, etc.)
+
+---
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/studycraft/StudyCraft.git
+cd StudyCraft
+```
+
+---
+
+### 2. Crie e ative o ambiente virtual
+
+**Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+Se, ao ativar o ambiente, aparecer um erro como:
+```
+execution of scripts is disabled on this system
+```
+
+Execute o seguinte comando no PowerShell (como usuário normal):
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Quando solicitado, digite `A` (Yes to All) ou `Y` para confirmar.
+
+**Linux/Mac:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+### 3. Instale as dependências do projeto
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 4. Rode o servidor de desenvolvimento
+
+```bash
+python manage.py runserver
+```
+
+Acesse o sistema em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+Para acessar em qualquer perfil utilize as seguintes credenciais de superusuário:
+
+  ```
+  Usuário: admin
+  Senha: 123456
+  ```
+
+---
+
+### ✅ Dicas Úteis
+
+- O sistema é **100% local** e funciona sem internet.
+- O banco de dados padrão (SQLite) **já está incluído no repositório**, pronto para uso.
+- Você **só precisa rodar `migrate`** se:
+  - Excluir o arquivo `db.sqlite3`, ou
+  - Clonar o projeto e ele **não vier com o banco de dados** incluído.
+
+Se esse for o caso, ative o ambiente virtual e execute:
+
+```bash
+python manage.py migrate
+```
+
+- Se faltar alguma biblioteca, ative o ambiente virtual e repita:
+
+```bash
+pip install -r requirements.txt
+```
+
+- O projeto não exige nenhuma configuração adicional — basta rodar o servidor e acessar [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
 
 ```bash
 # Instale as dependências
